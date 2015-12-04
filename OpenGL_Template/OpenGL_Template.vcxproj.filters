@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Game.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FileLoader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectFactory.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector3.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjectComponentFactory.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Command.cpp">
+      <Filter>CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMoveCommand.cpp">
+      <Filter>CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Assets</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraRotateCommand.cpp">
+      <Filter>CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="FileLoader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector3.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectFactory.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjectComponentFactory.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Constants.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Command.h">
+      <Filter>CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMoveCommand.h">
+      <Filter>CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraRotateCommand.h">
+      <Filter>CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FragmentShader.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="VertexShader.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{7503324c-c0d7-4a7c-add8-a60a22f76336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{f12afab2-adb5-43b2-8fcd-26e8cd087f4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{6a9bded0-e138-44d4-982a-c5163286baaf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Components">
+      <UniqueIdentifier>{0b390fb2-e2fa-461f-a12a-abbbb035784e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandPattern">
+      <UniqueIdentifier>{1c8f8f01-ce9d-4017-b82c-67c5dc41f94c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{8ac65065-7f6b-4eab-913c-d82fb978bdf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{56875c97-73b7-4beb-8b1b-5c995b344d00}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
