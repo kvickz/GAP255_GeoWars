@@ -19,8 +19,7 @@ Game::Game()
     , m_pInputManager(nullptr)
     , m_pCamera(nullptr)
     , m_pTime(nullptr)
-    //, m_deltaTime(0)
-    //, m_elapsed(0)
+    , m_pPlayer(nullptr)
 {
     //
 }
@@ -73,48 +72,31 @@ void Game::Init()
 #include "TransformComponent.h"
 #include "Mesh.h"
 
-const int k_numOfSpheres = 4;
+const int k_numOfGameObjects = 1;
 const int k_positionOffset = 4;
 
 void Game::CreateGameObjects()
 {
     GameObjectFactory factory(m_pRenderer, m_pTime);
-    Mesh* pSphereMesh = m_pAssetManager->LoadMesh("Sphere.obj");
+    Mesh* pSphereMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
     Material* pMaterial = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl");
 
-    //Creating a grid of objects
-    for (int j = 0; j < k_numOfSpheres; ++j)
-    {
-        for (int i = 0; i < k_numOfSpheres; ++i)
-        {
-            unsigned int index = j * k_numOfSpheres + i;
+    m_gameObjects.push_back(factory.CreatePlayer(this));
+    m_gameObjects[0]->GetComponent<RenderComponent>(k_renderComponentID)->Init(pSphereMesh, pMaterial);
 
-            m_gameObjects.push_back(factory.CreatePlanet(this));
-            m_gameObjects[index]->GetComponent<RenderComponent>(k_renderComponentID)->Init(pSphereMesh, pMaterial);
-
-            float x = (float)(i * k_positionOffset);
-            float y = (float)(j * k_positionOffset);
-            //float x = 0;
-            //float y = 5;
-            float z = -50.f;
-            m_gameObjects[index]->GetTransformComponent()->SetPosition(x, y, z);
-        }
-    }
-    
-    //Testing parenting
-    for (int i = 0; i < (k_numOfSpheres * k_numOfSpheres) - 1; ++i)
-    {
-        m_gameObjects[i + 1]->GetTransformComponent()->SetParent(m_gameObjects[i]->GetTransformComponent());
-    }
-    /*
-    m_gameObjects[1]->GetTransformComponent()->SetParent(m_gameObjects[0]->GetTransformComponent());
-    m_gameObjects[2]->GetTransformComponent()->SetParent(m_gameObjects[1]->GetTransformComponent());
-    m_gameObjects[3]->GetTransformComponent()->SetParent(m_gameObjects[2]->GetTransformComponent());
-    */
+    float x = 0.f;
+    float y = 0.f;
+    float z = 0.f;
+    m_gameObjects[0]->GetTransformComponent()->SetPosition(x, y, z);
 
     m_pCamera = factory.CreateCamera(this);
-    m_pInputManager->AddPlayer(0, m_pCamera);
+    m_pInputManager->AddPlayer(0, m_gameObjects[0]);
     m_gameObjects.push_back(m_pCamera);
+
+    //Set the camera position and rotation
+    m_pCamera->GetTransformComponent()->SetPosition(0, 180, 0);
+    //Looking down
+    m_pCamera->GetTransformComponent()->SetEulerRotation(-1.55f, 0, 0);
 
     // Object Initialization
     //INIT ALL GAME OBJECTS
@@ -171,24 +153,11 @@ int Game::Update()
 //-------------------------------------------------------------------------------------- -
 void Game::UpdateGameLogic()
 {
+    
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
     //m_gameObjects[0]->GetTransformComponent()->Rotate(0.1f, 0.f, 0.f);
     
-    /*
-    for (int j = 0; j < k_numOfSpheres; ++j)
-    {
-        for (int i = 0; i < k_numOfSpheres; ++i)
-        {
-            unsigned int index = j * k_numOfSpheres + i;
-
-            float x = ((sinVal * 3.f) + ((float)(i * k_positionOffset)));
-            float y = (float)(j * k_positionOffset);
-            float z = -50.f;
-            m_gameObjects[index]->GetTransformComponent()->SetPosition(x, y, z);
-        }
-    }
-    */
 }
 
 //-------------------------------------------------------------------------------------- -

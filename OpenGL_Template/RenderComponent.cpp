@@ -126,17 +126,17 @@ void RenderComponent::Update()
     cml::matrix_scale(objectScale, m_pScaleReference->x, m_pScaleReference->y, m_pScaleReference->z);
 
     //Rotate
-    /*
+    //TODO: Figure out a good way to do world rotation
     cml::matrix_rotate_about_local_x(objectRotation, m_rotationReference->x);
     cml::matrix_rotate_about_local_y(objectRotation, m_rotationReference->y);
     cml::matrix_rotate_about_local_z(objectRotation, m_rotationReference->z);
-    */
-    Vector3 worldRot = m_pTransform->GetWorldRotation();
-    worldRot.Zero();
+    
+    //Vector3 worldRot = m_pTransform->GetWorldRotation();
+    //worldRot.Zero();
     /*cml::matrix_rotate_about_local_x(objectRotation, worldRot.x);
     cml::matrix_rotate_about_local_y(objectRotation, worldRot.y);
     cml::matrix_rotate_about_local_z(objectRotation, worldRot.z);*/
-    cml::matrix_rotation_euler(objectRotation, worldRot.x, worldRot.y, worldRot.z, cml::euler_order_xyz);
+    //cml::matrix_rotation_euler(objectRotation, worldRot.x, worldRot.y, worldRot.z, cml::euler_order_xyz);
     //cml::matrix_rotation_
 
     //Translate

@@ -14,6 +14,7 @@
     <ProjectGuid>{B2851409-CBB5-403F-8849-105199A8F606}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>OpenGL_Template</RootNamespace>
+    <ProjectName>GeoWarsClone</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -53,16 +54,16 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>CML-1_0_4;SDL2\include;glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>CML-1_0_4;SDL2\include;glew-1.13.0\include;SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)SDL2_mixer\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -75,18 +76,18 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>CML-1_0_4;SDL2\include;glew-1.13.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>CML-1_0_4;SDL2\include;glew-1.13.0\include;SDL2_mixer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)SDL2_mixer\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -94,6 +95,7 @@
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraMoveCommand.cpp" />
     <ClCompile Include="CameraRotateCommand.cpp" />
+    <ClCompile Include="CharacterController.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -105,8 +107,10 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MovePlayerCommand.cpp" />
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -129,8 +133,11 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CameraMoveCommand.h" />
+    <ClInclude Include="MovePlayerCommand.h" />
+    <ClInclude Include="CharacterController.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Utility.h" />

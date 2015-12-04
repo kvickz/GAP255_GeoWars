@@ -10,6 +10,10 @@ typedef int AxisValue;
 class Command
 {
 protected:
+    //TODO: Check coding standards for static const
+    static const AxisValue k_maxStickInputValue = 0x7fffffff;
+    static const AxisValue k_deadZoneRange = 8000;
+
     GameObject* const m_pGameObject;
 
 public:
@@ -19,7 +23,7 @@ public:
     virtual void SetAxisXValue(AxisValue value) {}
     virtual void SetAxisYValue(AxisValue value) {}
     virtual void SetAxisZValue(AxisValue value) {}
-    virtual void ResetAxisValues();
+    virtual void ResetAxisValues() {};
 };
 
 #endif // !COMMAND_H

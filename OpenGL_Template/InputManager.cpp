@@ -8,6 +8,7 @@
 
 #include "CameraMoveCommand.h"
 #include "CameraRotateCommand.h"
+#include "MovePlayerCommand.h"
 
 #include "TransformComponent.h"
 
@@ -47,7 +48,7 @@ InputManager::~InputManager()
 InputManager::KeyboardCommands::~KeyboardCommands()
 {
     delete axis_XYZ;
-    delete axis_XYZ_rotation;
+    //delete axis_XYZ_rotation;
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -71,9 +72,9 @@ InputManager::ControllerCommands::~ControllerCommands()
 void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
 {
     //[???] Why doesn't this work with a static_cast like in my GameObject::GetComponent?
-    CameraComponent* pCamComponent = pGameObject->GetComponentReinterpret<CameraComponent>(k_cameraComponentID);
-    m_pKeyboardCommands->axis_XYZ = new CameraMoveCommand(pGameObject, pCamComponent);
-    m_pKeyboardCommands->axis_XYZ_rotation = new CameraRotateCommand(pGameObject, pCamComponent);
+    //CameraComponent* pCamComponent = pGameObject->GetComponentReinterpret<CameraComponent>(k_cameraComponentID);
+    m_pKeyboardCommands->axis_XYZ = new MovePlayerCommand(pGameObject);
+    //m_pKeyboardCommands->axis_XYZ_rotation = new CameraRotateCommand(pGameObject, pCamComponent);
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -81,7 +82,6 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
 //      -Encapsulates the handling of events
 //      -Returns 0 or FALSE for quitting
 //-------------------------------------------------------------------------------------- -
-
 int InputManager::HandleEvents()
 {
     ResetUpdateVariables();
@@ -251,7 +251,7 @@ int InputManager::HandleEvents()
 
     //Execute Command Objects
     m_pKeyboardCommands->axis_XYZ->Execute();
-    m_pKeyboardCommands->axis_XYZ_rotation->Execute();
+    //m_pKeyboardCommands->axis_XYZ_rotation->Execute();
 
     return 1;   //SUCCESS
 }
@@ -277,25 +277,25 @@ void InputManager::ApplyKeyboardInput()
     // Q KEY
     if (m_QKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxIntValue);
+        
     }
 
     // E KEY
     if (m_EKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxIntValue);
+        
     }
 
     // W KEY
     if (m_WKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisZValue(-k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxIntValue);
     }
 
     // S KEY
     if (m_SKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisZValue(k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxIntValue);
     }
 
     // R KEY
@@ -348,9 +348,9 @@ void InputManager::ApplyMouseInput()
         Utility::Clamp(yRotation, INT_MIN, INT_MAX);
 
         //Vertical Rotation
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(xRotation);
+        //m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(xRotation);
         //Horizontal Rotation
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisYValue(yRotation);
+        //m_pKeyboardCommands->axis_XYZ_rotation->SetAxisYValue(yRotation);
     }
 }
 
@@ -364,5 +364,5 @@ void InputManager::ResetUpdateVariables()
 {
     //Default axes to zero
     m_pKeyboardCommands->axis_XYZ->ResetAxisValues();
-    m_pKeyboardCommands->axis_XYZ_rotation->ResetAxisValues();
+    //m_pKeyboardCommands->axis_XYZ_rotation->ResetAxisValues();
 }

@@ -17,8 +17,6 @@ class Time;
 typedef unsigned int GLuint;
 typedef int GLint;
 
-//class RenderComponent;
-
 class Game
 {
 private:
@@ -27,6 +25,7 @@ private:
     std::vector<GameObject*> m_gameObjects;
     std::queue<GameObject*> m_gameObjectsToDelete;
     GameObject* m_pCamera;
+    GameObject* m_pPlayer;
 
     Renderer* m_pRenderer;
     AssetManager* m_pAssetManager;

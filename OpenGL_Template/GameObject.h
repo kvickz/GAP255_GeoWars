@@ -3,7 +3,6 @@
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
-
 #include <unordered_map>
 
 class GameObjectComponent;
@@ -76,7 +75,7 @@ ComponentType* GameObject::GetComponent(ComponentID id)
     if (iterator == nullptr)
     { 
         //Make a wrapper for this
-        SDL_Log("Error getting component of id: " + id);
+        //SDL_Log("Error getting component of id: " + id);
         return nullptr;
     }
 

@@ -22,5 +22,6 @@ public:
 
     GameObject* CreatePlanet(Game* pGame);
     GameObject* CreateCamera(Game* pGame);
+    GameObject* CreatePlayer(Game* pGame);
 };
 #endif // !GAMEOBJECTFACTORY_H

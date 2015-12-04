@@ -10,8 +10,6 @@ class CameraComponent;
 class CameraMoveCommand : public Command
 {
 private:
-    const AxisValue k_maxStickInputValue = 0x7fffffff;
-    const AxisValue k_deadZoneRange = 8000;
     AxisValue m_xAxis;
     AxisValue m_yAxis;
     AxisValue m_zAxis;
