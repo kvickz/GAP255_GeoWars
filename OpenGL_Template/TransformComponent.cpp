@@ -130,16 +130,9 @@ void TransformComponent::Rotate(float x, float y, float z)
 // SCALE
 //***************************************************************************************
 //-------------------------------------------------------------------------------------- -
-void TransformComponent::SetScale(float x, float y, float z)
+void TransformComponent::Scale(float x, float y, float z)
 {
     m_scale.x = x;
     m_scale.y = y;
     m_scale.z = z;
-}
-
-void TransformComponent::Scale(float x, float y, float z)
-{
-    m_scale.x += x;
-    m_scale.y += y;
-    m_scale.z += z;
 }

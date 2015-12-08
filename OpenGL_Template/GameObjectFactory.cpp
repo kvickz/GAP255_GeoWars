@@ -75,3 +75,34 @@ GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
 
     return pObject;
 }
+
+//-------------------------------------------------------------------------------------- -
+//  Create Enemy Object
+//-------------------------------------------------------------------------------------- -
+GameObject* GameObjectFactory::CreateEnemy(Game* pGame, GameObject* pTarget)
+{
+	GameObjectComponentFactory componentFactory;
+	GameObject* pObject = new GameObject(k_enemy_1ID, pGame);
+
+	//Add Transform Component
+	TransformComponent* pTransform = componentFactory.CreateTransformComponent(pObject);
+	pObject->AddComponent(k_transformComponentID, pTransform);
+
+	//Add Render Component
+	RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
+	pObject->AddComponent(k_renderComponentID, pRenderComponent);
+
+	//Add Rigidbody
+	Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform);
+	pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
+
+	//Add Character Controller Component
+	CharacterController* pCharacterControllerComponent = componentFactory.CreateCharacterControllerComponent(pObject, pTransform, pRigidbody);
+	pObject->AddComponent(k_characterControllerComponentID, pCharacterControllerComponent);
+
+	//Add AI Component
+	EnemyAIComponent* pEnemyAIComponent = componentFactory.CreateEnemyAIComponent(pObject, pTransform, pCharacterControllerComponent, pTarget);
+	pObject->AddComponent(k_EnemyAIComponentID, pEnemyAIComponent);
+
+	return pObject;
+}

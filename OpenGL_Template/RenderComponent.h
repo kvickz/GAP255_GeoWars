@@ -7,6 +7,7 @@
 
 #include "Enums.h"
 #include "Vector3.h"
+#include "Color.h"
 
 #include <cml/cml.h>
 
@@ -21,6 +22,7 @@ class RenderComponent : public GameObjectComponent
 {
     Mesh* m_pMesh;
     Material* m_pMaterial;
+    GLint m_materialColorUniform;
 
     Vector3* m_translationReference;
     Vector3* m_rotationReference;
@@ -44,6 +46,7 @@ public:
     void LoadMeshFromFile(const char* const fileName);
     void SetMesh(Mesh* pMesh);
     void LoadMaterial(Material* const pMaterial);
+    void SetColor(Color color);
     void CreateProgram();
     void Draw();
 

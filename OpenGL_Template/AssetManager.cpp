@@ -49,9 +49,9 @@ Mesh* AssetManager::GetMesh(const char* const pFileName)
 //--------------------------------------------------------------------------------------- -
 //  Material Functions
 //--------------------------------------------------------------------------------------- -
-Material* AssetManager::LoadMaterial(const char* const pMaterialName, const char* const pVertFile, const char* const pFragFile)
+Material* AssetManager::LoadMaterial(const char* const pMaterialName, const char* const pVertFile, const char* const pFragFile, Color color)
 {
-    Material* pNewMaterial = new Material(pVertFile, pFragFile);
+    Material* pNewMaterial = new Material(pVertFile, pFragFile, color);
     m_materials.emplace(pMaterialName, pNewMaterial);
 
     return pNewMaterial;

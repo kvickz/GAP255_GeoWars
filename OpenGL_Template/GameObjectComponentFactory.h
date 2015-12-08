@@ -10,6 +10,7 @@
 #include "CameraComponent.h"
 #include "CharacterController.h"
 #include "Rigidbody.h"
+#include "EnemyAIComponent.h"
 
 #include "Constants.h"
 
@@ -25,6 +26,7 @@ public:
     CameraComponent* CreateCameraComponent(GameObject* pGameObject, TransformComponent* pTransform, Renderer* const pRenderer, Time* const pTime);
     Rigidbody* CreateRigidbodyComponent(GameObject* pGameObject, TransformComponent* pTransform);
     CharacterController* CreateCharacterControllerComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody);
+	EnemyAIComponent* CreateEnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget);
 };
 
 #endif // !GAMEOBJECTCOMPONENTFACTORY_H

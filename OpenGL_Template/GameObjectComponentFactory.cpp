@@ -41,3 +41,11 @@ CharacterController* GameObjectComponentFactory::CreateCharacterControllerCompon
 
     return pComponent;
 }
+
+//AI CONTROLLER
+EnemyAIComponent* GameObjectComponentFactory::CreateEnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget)
+{
+	EnemyAIComponent* pComponent = new EnemyAIComponent(pGameObject, pTransform, pCharController, pTarget);
+
+	return pComponent;
+}

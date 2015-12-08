@@ -73,6 +73,12 @@
     <ClCompile Include="Rigidbody.cpp">
       <Filter>GameObject\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyAIComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -152,6 +158,18 @@
     </ClInclude>
     <ClInclude Include="Rigidbody.h">
       <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyAIComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Rect.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionSystem.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,8 @@
 #include <unordered_map>
 #include <string>
 
+#include "Color.h"
+
 class Mesh;
 class Material;
 
@@ -22,7 +24,7 @@ public:
     Mesh* LoadMesh(const char* const pFileName);
     Mesh* GetMesh(const char* const pFileName);
 
-    Material* LoadMaterial(const char* const pMaterialName, const char* const pVertFile, const char* const pFragFile);
+    Material* LoadMaterial(const char* const pMaterialName, const char* const pVertFile, const char* const pFragFile, Color color);
     Material* GetMaterial(const char* const pMaterialName);
 };
 

@@ -176,6 +176,16 @@ void RenderComponent::LoadMaterial(Material* const pMaterial)
 }
 
 //-------------------------------------------------------------------------------------- -
+//  Set Color Function
+//      -Sets the color, will make changes take place next frame
+//-------------------------------------------------------------------------------------- -
+void RenderComponent::SetColor(Color color)
+{
+    m_pMaterial->SetColor(color);
+    glUniform3f(m_materialColorUniform, color.r, color.g, color.b);
+}
+
+//-------------------------------------------------------------------------------------- -
 //  Create Program Function
 //      -Will create a program and link shaders to it
 //      -Also handles late-phase of buffer binding
@@ -194,7 +204,12 @@ void RenderComponent::CreateProgram()
     glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(posAttrib);
 
-    //TODO: Not sure where to put this just yet
+    //Color
+    m_materialColorUniform = glGetUniformLocation(m_shaderProgram, "shaderColor");
+    Color color = m_pMaterial->GetColor();
+    glUniform3f(m_materialColorUniform, color.r, color.g, color.b);
+
+    //Getting matrix uniforms
     m_transformMatrixPair.second = glGetUniformLocation(m_shaderProgram, "transformMatrix");
     m_viewMatrixUniform = glGetUniformLocation(m_shaderProgram, "viewMatrix");
     m_projectionMatrixUniform = glGetUniformLocation(m_shaderProgram, "projectionMatrix");

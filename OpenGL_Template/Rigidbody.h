@@ -19,6 +19,13 @@ public:
     virtual void Update() override;
 
     void AddForce(float x, float y);
+
+private:
+	void CheckForLevelBarrier();
+	void BounceHorizontal();
+	void BounceVertical();
+
+	void ResetVelocity();
 };
 
 #endif // !RIGIDBODY_H

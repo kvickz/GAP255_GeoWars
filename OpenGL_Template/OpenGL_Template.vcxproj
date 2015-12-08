@@ -96,7 +96,9 @@
     <ClCompile Include="CameraMoveCommand.cpp" />
     <ClCompile Include="CameraRotateCommand.cpp" />
     <ClCompile Include="CharacterController.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="EnemyAIComponent.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -120,8 +122,11 @@
     <ClInclude Include="AssetManager.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraRotateCommand.h" />
+    <ClInclude Include="CollisionSystem.h" />
+    <ClInclude Include="Color.h" />
     <ClInclude Include="Command.h" />
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="EnemyAIComponent.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Game.h" />
@@ -135,6 +140,7 @@
     <ClInclude Include="CameraMoveCommand.h" />
     <ClInclude Include="MovePlayerCommand.h" />
     <ClInclude Include="CharacterController.h" />
+    <ClInclude Include="Rect.h" />
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rigidbody.h" />

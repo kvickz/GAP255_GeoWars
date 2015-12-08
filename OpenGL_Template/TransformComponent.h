@@ -46,7 +46,6 @@ public:
     //Scale
     Vector3 GetScale() { return m_scale; }
     Vector3* GetScalePointer() { return &m_scale; }
-    void SetScale(float x, float y, float z);
     void Scale(float x, float y, float z);
 };
 

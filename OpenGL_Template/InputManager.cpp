@@ -289,13 +289,13 @@ void InputManager::ApplyKeyboardInput()
     // W KEY
     if (m_WKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxIntValue);
     }
 
     // S KEY
     if (m_SKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxIntValue);
+		m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxIntValue);
     }
 
     // R KEY

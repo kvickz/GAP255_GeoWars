@@ -19,7 +19,17 @@ typedef int GLint;
 
 class Game
 {
+public:
+	struct LevelBoundary
+	{
+		float left;
+		float right;
+		float top;
+		float bottom;
+	};
+
 private:
+
     bool m_running;
 
     std::vector<GameObject*> m_gameObjects;
@@ -32,6 +42,9 @@ private:
     InputManager* m_pInputManager;
     Time* m_pTime;
 
+	//TODO: Maybe make a level class? No plan for other levels though
+	LevelBoundary m_levelBoundaries;
+
 public:
     Game();
     ~Game();
@@ -40,13 +53,19 @@ public:
     int Update();
     void Shutdown();
 
-    GameObject* GetCameraObject() { return m_pCamera; }
-    int GetDeltaTime();
-    unsigned long GetElapsedTime();
+	GameObject* GetCameraObject() { return m_pCamera; }
+	const LevelBoundary* GetLevelBoundaries() const { return &m_levelBoundaries; }
 
 private:
+	//CreatingGameObjects helper funcs
+	void InitLevelBoundaries();
+	void CreatePlayer();
+	void CreateCamera();
+	void CreateEnemy(float x, float y);
+
     void UpdateGameLogic();
     void CreateGameObjects();
+	void InitializeGameObjects();
     void UpdateGameObjects();
     void RemoveGameObject(GameObject* pGameObject);
     void DeleteQueuedObjects();

@@ -12,8 +12,9 @@ Material::Material()
     //
 }
 
-Material::Material(const char* const pVertexFilePath, const char* const pFragmentFilePath)
+Material::Material(const char* const pVertexFilePath, const char* const pFragmentFilePath, Color color)
 {
+    m_color = color;
     LoadShader(pVertexFilePath, ShaderType::k_vertex);
     LoadShader(pFragmentFilePath, ShaderType::k_fragment);
 }
@@ -60,4 +61,18 @@ void Material::LoadShader(const char* const fileName, ShaderType type)
 const GLuint Material::GetShaderGLPointer(const ShaderType type)
 {
     return m_shaders[type].second;
+}
+
+void Material::SetColor(float r, float g, float b)
+{
+    m_color.r = r;
+    m_color.g = g;
+    m_color.b = b;
+}
+
+void Material::SetColor(Color color)
+{
+    m_color.r = color.r;
+    m_color.g = color.g;
+    m_color.b = color.b;
 }

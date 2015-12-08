@@ -23,5 +23,7 @@ public:
     GameObject* CreatePlanet(Game* pGame);
     GameObject* CreateCamera(Game* pGame);
     GameObject* CreatePlayer(Game* pGame);
+	GameObject* CreateEnemy(Game* pGame, GameObject* pTarget);
+	GameObject* CreateWall();	//TODO: Implement
 };
 #endif // !GAMEOBJECTFACTORY_H

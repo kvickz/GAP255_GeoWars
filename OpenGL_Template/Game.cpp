@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "FileLoader.h"
 #include "Time.h"
+#include "Color.h"
 
 #include "GameObject.h"
 #include "GameObjectFactory.h"
@@ -59,6 +60,7 @@ void Game::Init()
     m_pTime = new Time();
 
     CreateGameObjects();
+	InitializeGameObjects();
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -71,52 +73,41 @@ void Game::Init()
 #include "Material.h"
 #include "TransformComponent.h"
 #include "Mesh.h"
+#include "Vector3.h"
 
-const int k_numOfGameObjects = 1;
-const int k_positionOffset = 4;
+#include <stdlib.h>
+#include <Time.h>
 
 void Game::CreateGameObjects()
 {
-    GameObjectFactory factory(m_pRenderer, m_pTime);
-    Mesh* pSphereMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
-    Material* pMaterial = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl");
+	InitLevelBoundaries();
+	CreatePlayer();
+	CreateCamera();
 
-    m_gameObjects.push_back(factory.CreatePlayer(this));
-    m_gameObjects[0]->GetComponent<RenderComponent>(k_renderComponentID)->Init(pSphereMesh, pMaterial);
+	//Seed
+	srand((unsigned int)time(NULL));
 
-    float x = 0.f;
-    float y = 0.f;
-    float z = 0.f;
-    m_gameObjects[0]->GetTransformComponent()->SetPosition(x, y, z);
+	//CreateEnemy(0, 30);
 
-    m_pCamera = factory.CreateCamera(this);
-    m_pInputManager->AddPlayer(0, m_gameObjects[0]);
-    m_gameObjects.push_back(m_pCamera);
+	for (int i = 0; i < 15; ++i)
+	{
+		CreateEnemy(rand() % 30 * 5.f, rand() % 30 * 1.5f);
+	}
+	
+}
 
-    //Set the camera position and rotation
-    m_pCamera->GetTransformComponent()->SetPosition(0, 180, 0);
-    //Looking down
-    m_pCamera->GetTransformComponent()->SetEulerRotation(-1.55f, 0, 0);
-
-    // Object Initialization
-    //INIT ALL GAME OBJECTS
-    for (GameObject* pGameObj : m_gameObjects)
-    {
-        pGameObj->Init();
-    }
-
-    /*
-    //OBJ 0
-    Material* pMaterial = new Material("VertexShader.glsl", "FragmentShader.glsl");
-    m_gameObjects[0]->GetComponent<RenderComponent>(k_renderComponentID)->Init("Sphere.obj", pMaterial);
-
-    //OBJ 1
-    pMaterial = new Material("VertexShader.glsl", "FragmentShader.glsl");
-    m_gameObjects[1]->GetComponent<RenderComponent>(k_renderComponentID)->Init("Sphere.obj", pMaterial);
-
-    m_gameObjects[0]->GetTransformComponent()->SetPosition(2.8f, 0.f, -5.9f);
-    m_gameObjects[1]->GetTransformComponent()->SetPosition(-2.8f, 0.f, -5.9f);
-    */
+//-------------------------------------------------------------------------------------- -
+//  Initialize Game Objects Function
+//		-Calls init on all game objects
+//-------------------------------------------------------------------------------------- -
+void Game::InitializeGameObjects()
+{
+	// Object Initialization
+	//INIT ALL GAME OBJECTS
+	for (GameObject* pGameObj : m_gameObjects)
+	{
+		pGameObj->Init();
+	}
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -151,13 +142,13 @@ int Game::Update()
 //  Update Game Logic Function
 //      -Runs any custom game logic
 //-------------------------------------------------------------------------------------- -
+#include "RenderComponent.h"
+
 void Game::UpdateGameLogic()
 {
-    
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
     //m_gameObjects[0]->GetTransformComponent()->Rotate(0.1f, 0.f, 0.f);
-    
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -244,12 +235,76 @@ void Game::DeleteAllObjects()
     }
 }
 
-int Game::GetDeltaTime() 
-{ 
-    return m_pTime->GetDeltaTime();
+//**************************
+//	Create the level
+//**************************
+void Game::InitLevelBoundaries()
+{
+	//TODO: This kinda sucks
+	const int k_halfLevelWidth = 80;
+	const int k_halfLevelHeight = 50;
+	m_levelBoundaries.left = -k_halfLevelWidth;
+	m_levelBoundaries.right = k_halfLevelWidth;
+	m_levelBoundaries.top = k_halfLevelHeight;
+	m_levelBoundaries.bottom = -k_halfLevelHeight;
 }
 
-unsigned long Game::GetElapsedTime() 
-{ 
-    return m_pTime->GetElapsedTime();
+//**************************
+//	Creating the player
+//**************************
+void Game::CreatePlayer()
+{
+	GameObjectFactory factory(m_pRenderer, m_pTime);
+	Mesh* pShipMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
+	Color playerColor(0, 0.5f, 1.f);
+	Material* pMaterialPlayer = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl", playerColor);
+
+	//Factory creates player
+	m_pPlayer = factory.CreatePlayer(this);
+	m_gameObjects.push_back(m_pPlayer);
+	m_pPlayer->GetComponent<RenderComponent>(k_renderComponentID)->Init(pShipMesh, pMaterialPlayer);
+
+	//Position
+	Vector3 playerPos(0.f, 0.f, 0.f);
+	m_pPlayer->GetTransformComponent()->SetPosition(playerPos.x, playerPos.y, playerPos.z);
+
+}
+
+//**************************
+//	Creating a camera
+//**************************
+void Game::CreateCamera()
+{
+	GameObjectFactory factory(m_pRenderer, m_pTime);
+	m_pCamera = factory.CreateCamera(this);
+	m_pInputManager->AddPlayer(0, m_gameObjects[0]);
+	m_gameObjects.push_back(m_pCamera);
+
+	//Set the camera position and rotation
+	m_pCamera->GetTransformComponent()->SetPosition(0, 180, 0);
+	//Looking down
+	m_pCamera->GetTransformComponent()->SetEulerRotation(-1.55f, 0, 0);
+}
+
+//**************************
+//	Creating Enemy
+//**************************
+void Game::CreateEnemy(float x, float y)
+{
+	GameObjectFactory factory(m_pRenderer, m_pTime);
+	Mesh* pEnemyShipMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
+	Color enemyColor(1.f, 0, 0);
+
+	enemyColor = Color::m_colors[rand() % ColorPreset::k_numOfColors];
+
+	//enemyColor = Color::m_colors[ColorPreset::k_green];
+	Material* pMaterialEnemy = m_pAssetManager->LoadMaterial("EnemyMaterial", "VertexShader.glsl", "FragmentShader.glsl", enemyColor);
+
+	//Factory creates enemy
+	GameObject* pEnemy = factory.CreateEnemy(this, m_pPlayer);
+	m_gameObjects.push_back(pEnemy);
+	pEnemy->GetComponent<RenderComponent>(k_renderComponentID)->Init(pEnemyShipMesh, pMaterialEnemy);
+
+	Vector3 enemyPos(x, 0.f, y);
+	pEnemy->GetTransformComponent()->SetPosition(enemyPos.x, enemyPos.y, enemyPos.z);
 }
