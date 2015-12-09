@@ -2,59 +2,65 @@
 
 #include "EnemyAIComponent.h"
 
+#include "PlayerChaserBehavior.h"
+#include "EnemyFloaterBehavior.h"
+
 #include "CharacterController.h"
 #include "TransformComponent.h"
 #include "GameObject.h"
 
 #include "Constants.h"
+#include "Vector3.h"
 
 #include <math.h>
 
+//-------------------------------------------------------------------------------------- -
+//  Constructor
+//-------------------------------------------------------------------------------------- -
 EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget)
-	:GameObjectComponent(k_EnemyAIComponentID, pGameObject, pTransform)
-	, m_pCharController(pCharController)
-	, m_pTarget(pTarget)
-	, m_moveSpeed(0.5f)
+    :GameObjectComponent(k_EnemyAIComponentID, pGameObject, pTransform)
+    , m_pCharController(pCharController)
+    , m_pTarget(pTarget)
+    , m_pBehavior(nullptr)
+    , m_moveSpeed(0.5f)
+    , rotateSpeed(0.1f)
+    , m_chasingPlayer(true)
 {
-	//
+    //Randomize the rotation direction
+    int randVal = rand() % 2;
+
+    if (randVal == 0)
+        rotateSpeed *= -1;
+
+    //Randomize the speed
+    std::pair<float, float> m_possibleSpeeds(0.3f, 0.7f);
+
+    m_moveSpeed = static_cast<float>(rand() / (static_cast<float>(RAND_MAX / (m_possibleSpeeds.second - m_possibleSpeeds.first))));
+    //m_possibleSpeeds.first = 0.3f;
+    //m_possibleSpeeds.second = 0.7f;
+
+    SetBehavior();
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Destructor
+//-------------------------------------------------------------------------------------- -
 EnemyAIComponent::~EnemyAIComponent()
 {
-	//
+    delete m_pBehavior;
+    m_pBehavior = nullptr;
 }
-
-#include <SDL.h>
-#include "Time.h"
 
 void EnemyAIComponent::Update()
 {
-	//Spinning
-	//float rotateSpeed = 0.5f;
-	//m_pTransform->Rotate(0, rotateSpeed, 0);
-
-	//Scaling
-	//float scaleMag = 0.01f;
-	//float scaleSpeed = 1.f;
-	//scaleMag = sinf(SDL_GetTicks() * scaleSpeed) * scaleMag + scaleMag;
-	//m_pTransform->Scale(scaleMag, 0, scaleMag);
-
-	//Moving
-	m_pCharController->Move(m_moveVector.x, m_moveVector.y);
-
-	//Find Player Direction
-	if (m_pTarget)
-	{
-		FindPlayerDirection();
-	}
-
-	//Update move direction/speed
-	m_moveVector.x = m_direction.x * m_moveSpeed;
-	m_moveVector.y = m_direction.y * m_moveSpeed;
+    m_pBehavior->Execute();
 }
 
-#include "Vector3.h"
-
+//-------------------------------------------------------------------------------------- -
+//  Find Player Direction Function
+//      -Gets the unit vector in the direction of the player
+//       then multiplies by it's speed
+//-------------------------------------------------------------------------------------- -
 void EnemyAIComponent::FindPlayerDirection()
 {
 	//Get Unit Vector on x and z planes
@@ -69,8 +75,19 @@ void EnemyAIComponent::FindPlayerDirection()
 
 	float magnitude = xDistSquared + yDistSquared;
 
+    //TODO: Optimize this
 	magnitude = sqrt(magnitude);
 
 	m_direction.x = xDistance / magnitude;
 	m_direction.y = yDistance / magnitude;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Set Behavior Function
+//      -Helper function to assign a behavior to an enemy
+//-------------------------------------------------------------------------------------- -
+void EnemyAIComponent::SetBehavior()
+{
+    //m_pBehavior = new PlayerChaserBehavior(this, m_moveSpeed);
+    m_pBehavior = new EnemyFloaterBehavior(this, 0.7f);
 }

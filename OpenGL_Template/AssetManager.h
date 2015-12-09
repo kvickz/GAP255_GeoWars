@@ -11,10 +11,12 @@
 class Mesh;
 class Material;
 
+typedef std::unordered_map<const char*, Mesh*> MeshContainer;
+
 class AssetManager
 {
 private:
-    std::unordered_map<const char*, Mesh*> m_meshes;
+    MeshContainer m_meshes;
     std::unordered_map<const char*, Material*> m_materials;
 
 public:

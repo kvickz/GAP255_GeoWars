@@ -35,6 +35,11 @@ AssetManager::~AssetManager()
 //--------------------------------------------------------------------------------------- -
 Mesh* AssetManager::LoadMesh(const char* const pFileName)
 {
+    //Search if the mesh already exists
+    auto findIt = m_meshes.find(pFileName);
+    if (findIt != m_meshes.end())
+        return m_meshes[pFileName];
+
     Mesh* pNewMesh = new Mesh(pFileName);
     m_meshes.emplace(pFileName, pNewMesh);
 
@@ -51,6 +56,11 @@ Mesh* AssetManager::GetMesh(const char* const pFileName)
 //--------------------------------------------------------------------------------------- -
 Material* AssetManager::LoadMaterial(const char* const pMaterialName, const char* const pVertFile, const char* const pFragFile, Color color)
 {
+    //Search if the material already exists
+    auto findIt = m_materials.find(pMaterialName);
+    if (findIt != m_materials.end())
+        return m_materials[pMaterialName];
+
     Material* pNewMaterial = new Material(pVertFile, pFragFile, color);
     m_materials.emplace(pMaterialName, pNewMaterial);
 

@@ -27,7 +27,7 @@ public:
     virtual void Destroy() {};
 
     TransformComponent* GetTransform() { return m_pTransform; }
-
+    GameObject* GetGameObject() { return m_pGameObject; }
     ComponentID GetComponentID() { return m_componentID; }
 };
 

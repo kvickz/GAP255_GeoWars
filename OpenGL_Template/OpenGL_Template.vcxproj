@@ -99,6 +99,9 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="Command.cpp" />
     <ClCompile Include="EnemyAIComponent.cpp" />
+    <ClCompile Include="EnemyFloaterBehavior.cpp" />
+    <ClCompile Include="PlayerChaserBehavior.cpp" />
+    <ClCompile Include="SpawnManager.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -127,6 +130,11 @@
     <ClInclude Include="Command.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="EnemyAIComponent.h" />
+    <ClInclude Include="EnemyBehavior.h" />
+    <ClInclude Include="EnemyFloaterBehavior.h" />
+    <ClInclude Include="EventSystem.h" />
+    <ClInclude Include="PlayerChaserBehavior.h" />
+    <ClInclude Include="SpawnManager.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileLoader.h" />
     <ClInclude Include="Game.h" />

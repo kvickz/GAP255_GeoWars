@@ -3,9 +3,12 @@
 //11-26-2015
 //Main.cpp
 
-//#include <vld.h>
+#include <vld.h>
 #include <SDL.h>
 #include "Game.h"
+
+#include <stdlib.h>
+#include <Time.h>
 
 //************************************************************************************** *
 //  Program structure
@@ -20,6 +23,8 @@
 //-------------------------------------------------------------------------------------- -
 int main(int argc, char* argv[])
 {
+    srand((unsigned int)time(NULL));
+
     // INIT APPLICATION
     g_game.Init();
 

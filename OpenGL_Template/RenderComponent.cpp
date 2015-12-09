@@ -141,14 +141,16 @@ void RenderComponent::Update()
 
     //Translate
     //This one is efficient but only grabs local position
-    //cml::matrix_translation(objectTranslation, m_translationReference->x, m_translationReference->y, m_translationReference->z);
+    cml::matrix_translation(objectTranslation, m_translationReference->x, m_translationReference->y, m_translationReference->z);
 
     //This grabs world position, which is what it should but
     //This lags unfortunately
+    /*
     cml::matrix_translation(objectTranslation
                             , m_pTransform->GetWorldPosition().x
                             , m_pTransform->GetWorldPosition().y
                             , m_pTransform->GetWorldPosition().z);
+                            */
 
     //Multiply Matrices
     m_transformMatrixPair.first = (objectTranslation * objectRotation * objectScale);

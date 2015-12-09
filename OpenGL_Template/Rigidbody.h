@@ -6,12 +6,13 @@
 #include "GameObjectComponent.h"
 
 #include "Vector2.h"
+#include "Vector3.h"
 
 class Rigidbody : public GameObjectComponent
 {
 private:
+    float m_dragFactor;
     Vector2_f m_velocity;
-    float m_maxSpeed;
 
 public:
     Rigidbody(GameObject* pGameObject, TransformComponent* pTransform);
@@ -19,13 +20,15 @@ public:
     virtual void Update() override;
 
     void AddForce(float x, float y);
+    Vector3 GetVelocity() const { return Vector3(m_velocity.x, 0, m_velocity.y); }
+    void SetDrag(float value) { m_dragFactor = value; }
 
 private:
 	void CheckForLevelBarrier();
 	void BounceHorizontal();
 	void BounceVertical();
 
-	void ResetVelocity();
+	void AddDrag();
 };
 
 #endif // !RIGIDBODY_H

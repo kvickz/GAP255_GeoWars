@@ -7,6 +7,9 @@
 #include <gl\glew.h>
 #include <SDL_opengl.h>
 
+//-------------------------------------------------------------------------------------- -
+//  Constructor
+//-------------------------------------------------------------------------------------- -
 Material::Material()
 {
     //
@@ -19,6 +22,9 @@ Material::Material(const char* const pVertexFilePath, const char* const pFragmen
     LoadShader(pFragmentFilePath, ShaderType::k_fragment);
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Destructor
+//-------------------------------------------------------------------------------------- -
 Material::~Material()
 {
     //
@@ -58,11 +64,17 @@ void Material::LoadShader(const char* const fileName, ShaderType type)
     glGetShaderInfoLog(pTempShader.second, k_bufferSize, NULL, buffer);
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Get Shader Pointer Function
+//-------------------------------------------------------------------------------------- -
 const GLuint Material::GetShaderGLPointer(const ShaderType type)
 {
     return m_shaders[type].second;
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Set Color Function
+//-------------------------------------------------------------------------------------- -
 void Material::SetColor(float r, float g, float b)
 {
     m_color.r = r;
@@ -70,6 +82,9 @@ void Material::SetColor(float r, float g, float b)
     m_color.b = b;
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Set Color Function
+//-------------------------------------------------------------------------------------- -
 void Material::SetColor(Color color)
 {
     m_color.r = color.r;

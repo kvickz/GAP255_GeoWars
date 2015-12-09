@@ -7,7 +7,7 @@
 
 Rigidbody::Rigidbody(GameObject* pGameObject, TransformComponent* pTransform)
     :GameObjectComponent(k_rigidbodyComponentID, pGameObject, pTransform)
-    , m_maxSpeed(1)
+    , m_dragFactor(0.9f)
 {
     //
 }
@@ -17,15 +17,15 @@ void Rigidbody::Update()
     //Update Velocity
     m_pTransform->Translate(m_velocity.x, 0, m_velocity.y);
 
-	ResetVelocity();
+    AddDrag();
 
 	CheckForLevelBarrier();
 }
 
-void Rigidbody::ResetVelocity()
+void Rigidbody::AddDrag()
 {
-	m_velocity.x *= 0.9f;
-	m_velocity.y *= 0.9f;
+    m_velocity.x *= m_dragFactor;
+    m_velocity.y *= m_dragFactor;
 }
 
 void Rigidbody::AddForce(float x, float y)
@@ -33,21 +33,6 @@ void Rigidbody::AddForce(float x, float y)
 	//Adding velocity
     m_velocity.x += x;
     m_velocity.y += y;
-
-	/*
-	//Limiting the acceleration speed
-    if (m_velocity.x > m_maxSpeed)
-        m_velocity.x = m_maxSpeed;
-
-    if (m_velocity.x < -m_maxSpeed)
-        m_velocity.x = -m_maxSpeed;
-
-    if (m_velocity.y > m_maxSpeed)
-        m_velocity.y = m_maxSpeed;
-
-    if (m_velocity.y < -m_maxSpeed)
-        m_velocity.y = -m_maxSpeed;
-		*/
 }
 
 #include "GameObject.h"
@@ -61,20 +46,38 @@ void Rigidbody::CheckForLevelBarrier()
 	Vector3 worldPos = m_pTransform->GetWorldPosition();
 
 	//Beyond left & right
-	if (worldPos.x < levelBoundaries->left || worldPos.x > levelBoundaries->right)
-		BounceHorizontal();
+    if (worldPos.x < levelBoundaries->left || worldPos.x > levelBoundaries->right)
+    {
+        if (worldPos.x < levelBoundaries->left)
+            m_pTransform->SetPosition(levelBoundaries->left, worldPos.y, worldPos.z);
+
+        if (worldPos.x > levelBoundaries->right)
+            m_pTransform->SetPosition(levelBoundaries->right, worldPos.y, worldPos.z);
+
+        BounceHorizontal();
+    }
+		
 	
 	//Beyond top & bottom
-	if (worldPos.z > levelBoundaries->top || worldPos.z < levelBoundaries->bottom)
-		BounceVertical();
+    if (worldPos.z > levelBoundaries->top || worldPos.z < levelBoundaries->bottom)
+    {
+        if (worldPos.z > levelBoundaries->top)
+            m_pTransform->SetPosition(worldPos.x, worldPos.y, levelBoundaries->top);
+
+        if (worldPos.z < levelBoundaries->bottom)
+            m_pTransform->SetPosition(worldPos.x, worldPos.y, levelBoundaries->bottom);
+
+        BounceVertical();
+    }
+		
 }
 
 void Rigidbody::BounceHorizontal()
 {
-	m_velocity.x *= -1.f;
+	m_velocity.x *= -1.0f;
 }
 
 void Rigidbody::BounceVertical()
 {
-	m_velocity.y *= -1.f;
+	m_velocity.y *= -1.0f;
 }

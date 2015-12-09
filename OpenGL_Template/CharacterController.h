@@ -11,6 +11,7 @@ class CharacterController : public GameObjectComponent
 {
 private:
     float m_moveSpeed;
+    float m_maxSpeed;
 
     Rigidbody* m_pRigidbody;
 
@@ -22,6 +23,8 @@ public:
     virtual void Update() override;
 
     void Move(float x, float y);
+
+    void SetMaxSpeed(float value) { m_maxSpeed = value; }
 };
 
 #endif // !CHARACTERCONTROLLER_H

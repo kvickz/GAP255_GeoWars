@@ -3,15 +3,17 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Vector3.h"
 #include <vector>
 #include <queue>
 
 #include <cml/cml.h>
 
-class Renderer;
+class SpawnManager;
 class AssetManager;
 class InputManager;
 class GameObject;
+class Renderer;
 class Time;
 
 typedef unsigned int GLuint;
@@ -45,6 +47,8 @@ private:
 	//TODO: Maybe make a level class? No plan for other levels though
 	LevelBoundary m_levelBoundaries;
 
+    SpawnManager* m_pEnemySpawner;
+
 public:
     Game();
     ~Game();
@@ -55,6 +59,9 @@ public:
 
 	GameObject* GetCameraObject() { return m_pCamera; }
 	const LevelBoundary* GetLevelBoundaries() const { return &m_levelBoundaries; }
+
+    GameObject* AddGameObject(GameObject* pObject);
+    GameObject* GetPlayerPointer() { return m_pPlayer; }
 
 private:
 	//CreatingGameObjects helper funcs

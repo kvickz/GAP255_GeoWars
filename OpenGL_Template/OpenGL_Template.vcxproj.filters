@@ -79,6 +79,15 @@
     <ClCompile Include="EnemyAIComponent.cpp">
       <Filter>GameObject\Components</Filter>
     </ClCompile>
+    <ClCompile Include="SpawnManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerChaserBehavior.cpp">
+      <Filter>GameObject\EnemyBehaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyFloaterBehavior.cpp">
+      <Filter>GameObject\EnemyBehaviors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -171,6 +180,21 @@
     <ClInclude Include="CollisionSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="SpawnManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyBehavior.h">
+      <Filter>GameObject\EnemyBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerChaserBehavior.h">
+      <Filter>GameObject\EnemyBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyFloaterBehavior.h">
+      <Filter>GameObject\EnemyBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="EventSystem.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.glsl">
@@ -201,6 +225,9 @@
     </Filter>
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{56875c97-73b7-4beb-8b1b-5c995b344d00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\EnemyBehaviors">
+      <UniqueIdentifier>{a4d847e8-4dba-498e-94e9-aee1d6e0c852}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

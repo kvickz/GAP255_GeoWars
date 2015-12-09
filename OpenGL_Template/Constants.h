@@ -35,6 +35,8 @@ const ComponentID k_EnemyAIComponentID = 6;
 //  CONSTANT VALUES
 //***********************************************
 const int k_maxIntValue = 0x7fffffff;
+const float k_rad2Deg = 57.295779f; //Converts Radians to Degrees
+const float k_deg2Rad = 0.0174532f; //Converts Degrees to Radians
 //***********************************************
 
 #endif // !CONSTANTS_H
