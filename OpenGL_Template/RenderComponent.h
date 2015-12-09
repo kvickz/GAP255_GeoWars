@@ -20,9 +20,12 @@ typedef std::pair<cml::matrix44f_c, GLint> TransformMatrixPair;
 
 class RenderComponent : public GameObjectComponent
 {
+private:
     Mesh* m_pMesh;
     Material* m_pMaterial;
     GLint m_materialColorUniform;
+
+    Color* m_pMaterialColor;
 
     Vector3* m_translationReference;
     Vector3* m_rotationReference;

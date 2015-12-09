@@ -25,6 +25,13 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , m_enemyTimer(0)
 {
     CreateEnemySpawns();
+
+    //Load Necessary Materials
+    Color playerDefaultColor(0, 0.5f, 1.f);
+    m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl", playerDefaultColor);
+
+    Color enemyDefaultColor = Color::m_colors[ColorPreset::k_red];
+    m_pAssetManager->LoadMaterial("EnemyMaterial", "VertexShader.glsl", "FragmentShader.glsl", enemyDefaultColor);
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -113,11 +120,14 @@ GameObject* SpawnManager::SpawnPlayer(Vector3 position)
     GameObjectFactory factory(m_pRenderer, m_pTime);
     Mesh* pShipMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
     Color playerColor(0, 0.5f, 1.f);
-    Material* pMaterialPlayer = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl", playerColor);
+    //Material* pMaterialPlayer = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl", playerColor);
+    Material* pMaterialPlayer = m_pAssetManager->CreateMaterialInstance("DefaultMaterial");
 
     //Factory creates player
     GameObject* pPlayer = factory.CreatePlayer(m_pGame);
-    pPlayer->GetComponent<RenderComponent>(k_renderComponentID)->Init(pShipMesh, pMaterialPlayer);
+    RenderComponent* pRenderComponent = pPlayer->GetComponent<RenderComponent>(k_renderComponentID);
+    pRenderComponent->Init(pShipMesh, pMaterialPlayer);
+    pRenderComponent->SetColor(playerColor);
 
     //Position
     pPlayer->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
@@ -134,15 +144,18 @@ GameObject* SpawnManager::CreateEnemy(float x, float y)
     Mesh* pEnemyShipMesh = m_pAssetManager->LoadMesh("Models/Ship_Enemy.obj");
 
     //Create color
-    //Color enemyColor(1.f / (float)(rand() % 5), 0, 0);
-    Color enemyColor = Color::m_colors[ColorPreset::k_red];
+    Color enemyColor(1.f / (float)(rand() % 5 + 1), 0, 0);
+    Color defaultColor = Color::m_colors[ColorPreset::k_red];
 
-    Material* pMaterialEnemy = m_pAssetManager->LoadMaterial("EnemyMaterial", "VertexShader.glsl", "FragmentShader.glsl", enemyColor);
+    //Material* pMaterialEnemy = m_pAssetManager->LoadMaterial("EnemyMaterial", "VertexShader.glsl", "FragmentShader.glsl", defaultColor);
+    Material* pMaterialEnemy = m_pAssetManager->CreateMaterialInstance("EnemyMaterial");
 
     //Factory creates enemy
     GameObjectFactory factory(m_pRenderer, m_pTime);
     GameObject* pEnemy = factory.CreateEnemy(m_pGame, m_pGame->GetPlayerPointer());
-    pEnemy->GetComponent<RenderComponent>(k_renderComponentID)->Init(pEnemyShipMesh, pMaterialEnemy);
+    RenderComponent* pRenderComponent = pEnemy->GetComponent<RenderComponent>(k_renderComponentID);
+    pRenderComponent->Init(pEnemyShipMesh, pMaterialEnemy);
+    pRenderComponent->SetColor(enemyColor);
 
     //Set position
     Vector3 enemyPos(x, 0.f, y);

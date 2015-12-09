@@ -6,11 +6,17 @@
 #include "Mesh.h"
 #include "Material.h"
 
+//-------------------------------------------------------------------------------------- -
+//  Constructor
+//-------------------------------------------------------------------------------------- -
 AssetManager::AssetManager()
 {
     //
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Destructor
+//-------------------------------------------------------------------------------------- -
 AssetManager::~AssetManager()
 {
     //Delete all the objects in meshes
@@ -27,6 +33,14 @@ AssetManager::~AssetManager()
     {
         delete iteratorMat->second;
         ++iteratorMat;
+    }
+
+    //Deleting material instances
+    auto iteratorMatInst = m_materialInstances.begin();
+    while (iteratorMatInst != m_materialInstances.end())
+    {
+        delete (*iteratorMatInst);
+        ++iteratorMatInst;
     }
 }
 
@@ -67,7 +81,23 @@ Material* AssetManager::LoadMaterial(const char* const pMaterialName, const char
     return pNewMaterial;
 }
 
+//--------------------------------------------------------------------------------------- -
+//  Get Material Function
+//--------------------------------------------------------------------------------------- -
 Material* AssetManager::GetMaterial(const char* const pMaterialName)
 {
     return m_materials[pMaterialName];
+}
+
+//--------------------------------------------------------------------------------------- -
+//  Create Material Instance Function
+//--------------------------------------------------------------------------------------- -
+Material* AssetManager::CreateMaterialInstance(std::string pMaterialName)
+{
+    //Create a copy of the template
+    Material* pNewMaterialInstance = new Material(*(m_materials[pMaterialName]));
+
+    m_materialInstances.push_back(pNewMaterialInstance);
+
+    return pNewMaterialInstance;
 }

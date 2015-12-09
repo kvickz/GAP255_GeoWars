@@ -74,6 +74,8 @@ void Game::Init()
 //-------------------------------------------------------------------------------------- -
 void Game::CreateGameObjects()
 {
+
+
 	InitLevelBoundaries();
 	CreatePlayer();
 	CreateCamera();
@@ -207,6 +209,16 @@ void Game::Shutdown()
 }
 
 //-------------------------------------------------------------------------------------- -
+//  Add Game Object Function
+//-------------------------------------------------------------------------------------- -
+GameObject* Game::AddGameObject(GameObject* pObject)
+{
+    m_gameObjects.push_back(pObject);
+
+    return pObject;
+}
+
+//-------------------------------------------------------------------------------------- -
 //  Delete All Objects Function
 //      -Only meant to be called by shutdown, does as the name says
 //-------------------------------------------------------------------------------------- -
@@ -264,11 +276,4 @@ void Game::CreateEnemy(float x, float y)
 {
     //Create
     AddGameObject(m_pEnemySpawner->SpawnEnemy(x, 0, y));
-}
-
-GameObject* Game::AddGameObject(GameObject* pObject)
-{
-    m_gameObjects.push_back(pObject);
-
-    return pObject;
 }

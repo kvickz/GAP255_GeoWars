@@ -103,6 +103,10 @@ void RenderComponent::Draw()
     glProgramUniformMatrix4fv(m_shaderProgram, m_viewMatrixUniform, 1, GL_FALSE, cameraViewMatrix.data());
     glProgramUniformMatrix4fv(m_shaderProgram, m_projectionMatrixUniform, 1, GL_FALSE, cameraProjectionMatrix.data());
 
+    //TODO: Figure out a way to not have to call this every time
+    m_pMaterialColor = &m_pMaterial->GetColor();
+    glUniform3f(m_materialColorUniform, m_pMaterialColor->r, m_pMaterialColor->g, m_pMaterialColor->b);
+
     glDrawElements(GL_TRIANGLES, GetIndices().size(), GL_UNSIGNED_INT, &GetIndices()[0]);
 
     glBindVertexArray(0);
@@ -175,6 +179,7 @@ void RenderComponent::LoadMeshFromFile(const char* const fileName)
 void RenderComponent::LoadMaterial(Material* const pMaterial)
 {
     m_pMaterial = pMaterial;
+    m_pMaterialColor = &m_pMaterial->GetColor();
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -208,8 +213,10 @@ void RenderComponent::CreateProgram()
 
     //Color
     m_materialColorUniform = glGetUniformLocation(m_shaderProgram, "shaderColor");
-    Color color = m_pMaterial->GetColor();
-    glUniform3f(m_materialColorUniform, color.r, color.g, color.b);
+
+    SetColor(m_pMaterial->GetColor());
+    //m_pMaterialColor = &m_pMaterial->GetColor();
+    //glUniform3f(m_materialColorUniform, m_pMaterialColor->r, m_pMaterialColor->g, m_pMaterialColor->b);
 
     //Getting matrix uniforms
     m_transformMatrixPair.second = glGetUniformLocation(m_shaderProgram, "transformMatrix");
