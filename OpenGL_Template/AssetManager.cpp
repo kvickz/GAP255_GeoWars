@@ -60,6 +60,14 @@ Mesh* AssetManager::LoadMesh(const char* const pFileName)
     return pNewMesh;
 }
 
+Mesh* AssetManager::GenerateQuad(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices)
+{
+    Mesh* pNewMesh = new Mesh(vertices, indices);
+    m_meshes.emplace(meshKey, pNewMesh);
+
+    return pNewMesh;
+}
+
 Mesh* AssetManager::GetMesh(const char* const pFileName)
 {
     return m_meshes[pFileName];

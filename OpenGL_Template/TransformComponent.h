@@ -7,13 +7,20 @@
 
 #include "Vector3.h"
 
+#include <cml/cml.h>
 #include <vector>
+
+typedef int GLint;
+//Contains 4x4 transform matrix and the uniform address
+typedef std::pair<cml::matrix44f_c, GLint> TransformMatrixPair;
 
 class TransformComponent : public GameObjectComponent
 {
 private:
     TransformComponent* m_pParent;
     std::vector<TransformComponent*> m_children;
+
+    TransformMatrixPair m_transformMatrixPair;
 
     Vector3 m_position;
     Vector3 m_eulerRotation;

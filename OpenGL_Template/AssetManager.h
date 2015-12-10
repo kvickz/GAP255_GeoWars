@@ -34,6 +34,7 @@ public:
     Material* GetMaterial(const char* const pMaterialName);
 
     Material* CreateMaterialInstance(std::string pMaterialName);
+    Mesh* GenerateQuad(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices);
 };
 
 #endif // !ASSETMANAGER_H

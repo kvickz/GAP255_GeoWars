@@ -49,7 +49,10 @@ public:
     void LoadMeshFromFile(const char* const fileName);
     void SetMesh(Mesh* pMesh);
     void LoadMaterial(Material* const pMaterial);
+
+    void SetColor(float r, float g, float b);
     void SetColor(Color color);
+
     void CreateProgram();
     void Draw();
 

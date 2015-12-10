@@ -5,20 +5,26 @@
 #include "AssetManager.h"
 #include "InputManager.h"
 #include "SpawnManager.h"
+#include "CollisionSystem.h"
 #include "FileLoader.h"
 #include "Time.h"
 
 #include "GameObject.h"
 #include "Vector3.h"
+#include "Macros.h"
 
 #include <math.h>
 
+//-------------------------------------------------------------------------------------- -
+//  Constructor
+//-------------------------------------------------------------------------------------- -
 Game::Game()
     :m_running(true)
     , m_pRenderer(nullptr)
     , m_pAssetManager(nullptr)
     , m_pInputManager(nullptr)
     , m_pEnemySpawner(nullptr)
+    , m_pCollisionSystem(nullptr)
     , m_pCamera(nullptr)
     , m_pTime(nullptr)
     , m_pPlayer(nullptr)
@@ -26,22 +32,17 @@ Game::Game()
     //
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Destructor
+//-------------------------------------------------------------------------------------- -
 Game::~Game()
 {
-    delete m_pRenderer;
-    m_pRenderer = nullptr;
-
-    delete m_pAssetManager;
-    m_pAssetManager = nullptr;
-
-    delete m_pInputManager;
-    m_pInputManager = nullptr;
-
-    delete m_pTime;
-    m_pTime = nullptr;
-
-    delete m_pEnemySpawner;
-    m_pEnemySpawner = nullptr;
+    SAFE_DELETE(m_pRenderer);
+    SAFE_DELETE(m_pAssetManager);
+    SAFE_DELETE(m_pInputManager);
+    SAFE_DELETE(m_pTime);
+    SAFE_DELETE(m_pEnemySpawner);
+    SAFE_DELETE(m_pCollisionSystem);
 
     m_pCamera = nullptr;
 }
@@ -61,8 +62,9 @@ void Game::Init()
     m_pTime = new Time();
     m_pAssetManager = new AssetManager();
     m_pInputManager = new InputManager(this);
-    m_pEnemySpawner = new SpawnManager(this, m_pRenderer, m_pTime, m_pAssetManager);
-    
+    m_pCollisionSystem = new CollisionSystem();
+    m_pEnemySpawner = new SpawnManager(this, m_pRenderer, m_pTime, m_pAssetManager, m_pCollisionSystem);
+
     CreateGameObjects();
 	InitializeGameObjects();
 }
@@ -74,16 +76,14 @@ void Game::Init()
 //-------------------------------------------------------------------------------------- -
 void Game::CreateGameObjects()
 {
-
-
 	InitLevelBoundaries();
 	CreatePlayer();
 	CreateCamera();
 
-    const int k_numOfEnemies = 10;
+    const int k_numOfEnemies = 55;
     for (int i = 0; i < k_numOfEnemies; ++i)
 	{
-		CreateEnemy(rand() % 30 * 5.f - 15, rand() % 30 * 1.5f);
+		CreateEnemy(rand() % 30 * 5.f - 25, 45.f);
 	}
 }
 
@@ -135,6 +135,7 @@ int Game::Update()
 //-------------------------------------------------------------------------------------- -
 void Game::UpdateGameLogic()
 {
+    m_pCollisionSystem->Update();
     m_pEnemySpawner->Update();
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
@@ -240,13 +241,80 @@ void Game::DeleteAllObjects()
 //**************************
 void Game::InitLevelBoundaries()
 {
-	//TODO: This kinda sucks
 	const int k_halfLevelWidth = 80;
 	const int k_halfLevelHeight = 50;
+    const float k_height = 0.1f;
 	m_levelBoundaries.left = -k_halfLevelWidth;
 	m_levelBoundaries.right = k_halfLevelWidth;
 	m_levelBoundaries.top = k_halfLevelHeight;
 	m_levelBoundaries.bottom = -k_halfLevelHeight;
+
+    //Creating the level boundaries
+    for (int i = 0; i < 1; ++i)
+    {
+        float distanceBetweenLines = 1.f;
+        float left = m_levelBoundaries.left - i * (distanceBetweenLines * i);
+        float right = m_levelBoundaries.right + i * (distanceBetweenLines * i);
+        float top = m_levelBoundaries.top - i * (distanceBetweenLines * i);
+        float bottom = m_levelBoundaries.bottom + i * (distanceBetweenLines * i);
+
+        //Left
+        CreateWall(left, bottom, left, top, k_height);
+        
+        //TODO: Figure out a resolution to the hashtable collision issue
+        //Close
+        //CreateWall(left, top, right, top, k_height);
+        //Right
+        /*
+        CreateWall(right, top, right, bottom, k_height);
+        //Far
+        CreateWall(right, bottom, left, bottom, k_height);
+        */
+    }
+}
+
+#include "Mesh.h"
+#include "GameObjectFactory.h"
+
+//**************************
+//  Creating a wall from...
+//                      Point A                         Point B                         Height
+void Game::CreateWall(float pointA_x, float pointA_y, float pointB_x, float pointB_y, float height)
+{
+    std::vector<float> verts;
+    std::vector<unsigned int> indices;
+
+    const float k_floor = -0.1f;
+    //Creating verts
+    //TODO: Find more elegant solution for mesh generation
+    //V1
+    verts.push_back(pointA_x);
+    verts.push_back(k_floor);
+    verts.push_back(pointA_y);
+    //V2
+    verts.push_back(pointA_x);
+    verts.push_back(height);
+    verts.push_back(pointA_y);
+    //V3
+    verts.push_back(pointB_x);
+    verts.push_back(height);
+    verts.push_back(pointB_y);
+    //V4
+    verts.push_back(pointB_x);
+    verts.push_back(k_floor);
+    verts.push_back(pointB_y);
+    
+    //Create indices
+    //F1
+    indices.push_back(0);
+    indices.push_back(1);
+    indices.push_back(2);
+    //F2
+    indices.push_back(2);
+    indices.push_back(3);
+    indices.push_back(0);
+
+    AddGameObject(m_pEnemySpawner->SpawnWall(verts, indices));
 }
 
 //**************************
@@ -265,8 +333,10 @@ void Game::CreatePlayer()
 //**************************
 void Game::CreateCamera()
 {
-    //Create
-    m_pCamera = AddGameObject(m_pEnemySpawner->SpawnCamera(Vector3(0, 180, 0), Vector3(-1.55f, 0, 0)));
+    //Create Camera
+    //m_pCamera = AddGameObject(m_pEnemySpawner->SpawnCamera(Vector3(0, 180, 0), Vector3(-1.55f, 0, 0)));
+    //m_pCamera = AddGameObject(m_pEnemySpawner->SpawnCamera(Vector3(0, 40, 100), Vector3(-0.35f, 0, 0)));
+    m_pCamera = AddGameObject(m_pEnemySpawner->SpawnCamera(Vector3(0, 130, 165), Vector3(-0.67f, 0, 0)));
 }
 
 //**************************

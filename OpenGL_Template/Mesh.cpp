@@ -4,6 +4,9 @@
 
 #include "FileLoader.h"
 
+#include "Macros.h"
+
+//Creating a mesh from a file
 Mesh::Mesh(const char* const fileName)
     :m_vertexBufferObject(0)
     , m_elementBufferObject(0)
@@ -12,22 +15,32 @@ Mesh::Mesh(const char* const fileName)
     m_pObjFile = new ObjFile;
     m_pObjFile->Load(fileName);
 
+    //Allocate memory
+    m_verts = m_pObjFile->GetVerticesAsFloats();
+    m_indices = m_pObjFile->GetFacesAsIndices();
+
+    CreateObject();
+}
+
+//Creating a mesh from an array
+Mesh::Mesh(std::vector<float> pVertices, std::vector<unsigned int> pIndices)
+    :m_vertexBufferObject(0)
+    , m_elementBufferObject(0)
+    , m_vertexArrayObject(0)
+    , m_pObjFile(nullptr)
+    , m_verts(pVertices)
+    , m_indices(pIndices)
+{
     CreateObject();
 }
 
 Mesh::~Mesh()
 {
-    //TODO: Safe delete
-    delete m_pObjFile;
-    m_pObjFile = nullptr;
+    SAFE_DELETE(m_pObjFile);
 }
 
 void Mesh::CreateObject()
 {
-    //Allocate memory
-    m_verts = m_pObjFile->GetVerticesAsFloats();
-    m_indices = m_pObjFile->GetFacesAsIndices();
-
     //VBO
     glGenBuffers(1, &m_vertexBufferObject);
     glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferObject);

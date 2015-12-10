@@ -51,6 +51,6 @@ void CharacterController::Move(float x, float y)
     m_pRigidbody->AddForce(xVal, yVal);
 
 	//Set rotation
-	float angle = ((k_rad2Deg) * atan2f(y, x)) - (45.f);
+	float angle = ((k_rad2Deg) * atan2f(y, x)) + (90.f);
 	m_pTransform->SetEulerRotation(0, angle, 0);
 }

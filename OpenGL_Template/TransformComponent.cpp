@@ -12,7 +12,6 @@ TransformComponent::TransformComponent(ComponentID id, GameObject* pGameObject)
     m_position.Zero();
     m_eulerRotation.Zero();
     m_scale.Identity();
-
 }
 
 TransformComponent::~TransformComponent()

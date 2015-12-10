@@ -5,9 +5,13 @@
 
 #include "Vector3.h"
 
+#include <vector>
+
 class Game;
 class GameObject;
+class GameObjectFactory;
 class AssetManager;
+class CollisionSystem;
 class Renderer;
 class Time;
 
@@ -17,6 +21,8 @@ private:
     Game* m_pGame;
     Renderer* m_pRenderer;
     AssetManager* m_pAssetManager;
+    CollisionSystem* m_pCollisionSystem;
+    GameObjectFactory* m_pGameObjectFactory;
     
     Time* m_pTime;
 
@@ -27,7 +33,7 @@ private:
     Vector3* m_pEnemySpawnPositions;
 
 public:
-    SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager);
+    SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager, CollisionSystem* pCollisionSystem);
     ~SpawnManager();
 
     void Update();
@@ -37,6 +43,7 @@ public:
     GameObject* SpawnEnemy(const unsigned int index);
 
     GameObject* SpawnCamera(Vector3 position, Vector3 rotation);
+    GameObject* SpawnWall(std::vector<float> vertices, std::vector<unsigned int> indices);
 
     GameObject* SpawnPlayer(Vector3 position);
 

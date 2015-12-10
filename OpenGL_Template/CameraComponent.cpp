@@ -49,6 +49,7 @@ void CameraComponent::Update()
 {
     //Reset Movement Scale
     //m_moveScale.Zero();
+    //m_pTransform->Rotate(0, 0.1f, 0);
 
     //Get Delta time
     int deltaTime = m_pTime->GetDeltaTime();

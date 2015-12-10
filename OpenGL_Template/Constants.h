@@ -18,6 +18,7 @@ const ObjectID k_planetID = 1;
 const ObjectID k_cameraID = 2;
 const ObjectID k_playerID = 3;
 const ObjectID k_enemy_1ID = 4;
+const ObjectID k_wallID = 10;
 //***********************************************
 
 //***********************************************
@@ -29,6 +30,8 @@ const ComponentID k_cameraComponentID = 3;
 const ComponentID k_characterControllerComponentID = 4;
 const ComponentID k_rigidbodyComponentID = 5;
 const ComponentID k_EnemyAIComponentID = 6;
+const ComponentID k_ColliderComponentID = 7;
+const ComponentID k_CharacterStatsComponentID = 8;
 //***********************************************
 
 //***********************************************

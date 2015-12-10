@@ -9,6 +9,7 @@
 
 #include <cml/cml.h>
 
+class CollisionSystem;
 class SpawnManager;
 class AssetManager;
 class InputManager;
@@ -40,6 +41,7 @@ private:
     GameObject* m_pPlayer;
 
     Renderer* m_pRenderer;
+    CollisionSystem* m_pCollisionSystem;
     AssetManager* m_pAssetManager;
     InputManager* m_pInputManager;
     Time* m_pTime;
@@ -69,6 +71,7 @@ private:
 	void CreatePlayer();
 	void CreateCamera();
 	void CreateEnemy(float x, float y);
+    void CreateWall(float pointA_x, float pointA_y, float pointB_x, float pointB_y, float height);
 
     void UpdateGameLogic();
     void CreateGameObjects();

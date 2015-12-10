@@ -3,13 +3,20 @@
 #include "Rigidbody.h"
 
 #include "TransformComponent.h"
+#include "CollisionSystem.h"
 #include "Constants.h"
 
-Rigidbody::Rigidbody(GameObject* pGameObject, TransformComponent* pTransform)
+Rigidbody::Rigidbody(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem)
     :GameObjectComponent(k_rigidbodyComponentID, pGameObject, pTransform)
     , m_dragFactor(0.9f)
+    , m_pCollisionSystem(pCollisionSystem)
 {
-    //
+    m_pCollisionSystem->RegisterRigidbody(this);
+}
+
+Rigidbody::~Rigidbody()
+{
+    m_pCollisionSystem->RemoveRigidbody(this);
 }
 
 void Rigidbody::Update()

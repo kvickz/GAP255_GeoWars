@@ -12,13 +12,22 @@ class EnemyFloaterBehavior;
 class EnemyBehavior;
 class Rigidbody;
 
+enum EnemyBehaviorType
+{
+      k_chaser
+    , k_floater
+    , k_none
+};
+
 class EnemyAIComponent : public GameObjectComponent
 {
+
 private:
     friend EnemyBehavior;
     friend PlayerChaserBehavior;
     friend EnemyFloaterBehavior;
 
+    EnemyBehaviorType m_behaviorType;
     EnemyBehavior* m_pBehavior;
 
 	GameObject* m_pTarget;
@@ -40,9 +49,10 @@ public:
 	virtual void Update() override;
 	void SetTarget(GameObject* pTarget) { m_pTarget = pTarget; }
 
+    void SetBehavior(EnemyBehaviorType type);
+
 private:
 	void FindPlayerDirection();
-    void SetBehavior();
 };
 
 #endif // !ENEMYAICOMPONENT_H

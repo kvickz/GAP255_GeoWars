@@ -22,6 +22,7 @@ EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* 
     , m_pCharController(pCharController)
     , m_pTarget(pTarget)
     , m_pBehavior(nullptr)
+    , m_behaviorType(EnemyBehaviorType::k_none)
     , m_moveSpeed(0.5f)
     , rotateSpeed(0.1f)
     , m_chasingPlayer(true)
@@ -39,7 +40,7 @@ EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* 
     //m_possibleSpeeds.first = 0.3f;
     //m_possibleSpeeds.second = 0.7f;
 
-    SetBehavior();
+    //SetBehavior(EnemyBehaviorType::k_chaser);
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -53,7 +54,8 @@ EnemyAIComponent::~EnemyAIComponent()
 
 void EnemyAIComponent::Update()
 {
-    m_pBehavior->Execute();
+    if (m_pBehavior)
+        m_pBehavior->Execute();
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -86,8 +88,25 @@ void EnemyAIComponent::FindPlayerDirection()
 //  Set Behavior Function
 //      -Helper function to assign a behavior to an enemy
 //-------------------------------------------------------------------------------------- -
-void EnemyAIComponent::SetBehavior()
+void EnemyAIComponent::SetBehavior(EnemyBehaviorType type)
 {
-    //m_pBehavior = new PlayerChaserBehavior(this, m_moveSpeed);
-    m_pBehavior = new EnemyFloaterBehavior(this, 0.7f);
+    if (m_behaviorType == type)
+        return;
+
+    delete m_pBehavior;
+
+    switch (type)
+    {
+    case EnemyBehaviorType::k_chaser:
+        m_pBehavior = new PlayerChaserBehavior(this, m_moveSpeed);
+        break;
+    case EnemyBehaviorType::k_floater:
+        m_pBehavior = new EnemyFloaterBehavior(this, 0.7f);
+        break;
+    case EnemyBehaviorType::k_none:
+        m_pBehavior = nullptr;
+        break;
+    }
+
+    m_behaviorType = type;
 }

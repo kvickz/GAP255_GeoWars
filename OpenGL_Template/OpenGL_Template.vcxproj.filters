@@ -88,6 +88,24 @@
     <ClCompile Include="EnemyFloaterBehavior.cpp">
       <Filter>GameObject\EnemyBehaviors</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionSystem.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionResponse.cpp">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerCollisionResponse.cpp">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyCollisionResponse.cpp">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterStats.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -195,6 +213,27 @@
     <ClInclude Include="EventSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionResponse.h">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerCollisionResponse.h">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyCollisionResponse.h">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterStats.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShader.glsl">
@@ -228,6 +267,9 @@
     </Filter>
     <Filter Include="GameObject\EnemyBehaviors">
       <UniqueIdentifier>{a4d847e8-4dba-498e-94e9-aee1d6e0c852}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\CollisionResponses">
+      <UniqueIdentifier>{1ebee2eb-55c8-4b47-89bd-f168da2d01e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

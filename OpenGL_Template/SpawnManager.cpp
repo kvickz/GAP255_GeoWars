@@ -11,20 +11,26 @@
 #include "Time.h"
 #include "Game.h"
 
+#include "Macros.h"
+
 //-------------------------------------------------------------------------------------- -
 //  Constructor
 //-------------------------------------------------------------------------------------- -
-SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager)
+SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager, CollisionSystem* pCollisionSystem)
     :m_pGame(pGame)
     , m_pTime(pTime)
     , m_pRenderer(pRenderer)
     , m_pAssetManager(pAssetManager)
+    , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(10)
+    , m_enemySpawnInterval(20)
     , m_enemySpawnIndex(0)
     , m_enemyTimer(0)
 {
     CreateEnemySpawns();
+
+    //Create Factory
+    m_pGameObjectFactory = new GameObjectFactory(pRenderer, pTime, pCollisionSystem, m_pAssetManager);
 
     //Load Necessary Materials
     Color playerDefaultColor(0, 0.5f, 1.f);
@@ -39,8 +45,8 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
 //-------------------------------------------------------------------------------------- -
 SpawnManager::~SpawnManager()
 {
-    delete m_pEnemySpawnPositions;
-    m_pEnemySpawnPositions = nullptr;
+    SAFE_DELETE(m_pEnemySpawnPositions);
+    SAFE_DELETE(m_pGameObjectFactory);
 
     m_pGame = nullptr;
 }
@@ -68,7 +74,7 @@ void SpawnManager::Update()
         if (m_enemySpawnIndex >= k_enemySpawnPositionCount)
             m_enemySpawnIndex = 0;
 
-        m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
+        //m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
     }
 }
 
@@ -101,15 +107,34 @@ GameObject* SpawnManager::SpawnEnemy(const unsigned int index)
 GameObject* SpawnManager::SpawnCamera(Vector3 position, Vector3 rotation)
 {
     //Create Camera
-    GameObjectFactory factory(m_pRenderer, m_pTime);
-    GameObject* m_pCamera = factory.CreateCamera(m_pGame);
+    GameObject* pCamera = m_pGameObjectFactory->CreateCamera(m_pGame);
 
     //Set the camera position and rotation
-    m_pCamera->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
+    pCamera->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
     //Looking down
-    m_pCamera->GetTransformComponent()->SetEulerRotation(rotation.x, rotation.y, rotation.z);
+    pCamera->GetTransformComponent()->SetEulerRotation(rotation.x, rotation.y, rotation.z);
 
-    return m_pCamera;
+    return pCamera;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Spawn Wall Function
+//      -Spawns a wall!
+//-------------------------------------------------------------------------------------- -
+GameObject* SpawnManager::SpawnWall(std::vector<float> vertices, std::vector<unsigned int> indices)
+{
+    //Create Wall
+    GameObject* pWall = m_pGameObjectFactory->CreateWall(m_pGame, vertices, indices);
+
+    Mesh* pWallMesh = m_pAssetManager->GenerateQuad("WallMesh", vertices, indices);
+    Material* pMaterialWall = m_pAssetManager->CreateMaterialInstance("EnemyMaterial");
+
+    RenderComponent* pRenderComponent = pWall->GetComponent<RenderComponent>(k_renderComponentID);
+    pRenderComponent->Init(pWallMesh, pMaterialWall);
+
+    pRenderComponent->SetColor(Color(0.f, 0.5f, 0.7f));
+
+    return pWall;
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -117,14 +142,13 @@ GameObject* SpawnManager::SpawnCamera(Vector3 position, Vector3 rotation)
 //-------------------------------------------------------------------------------------- -
 GameObject* SpawnManager::SpawnPlayer(Vector3 position)
 {
-    GameObjectFactory factory(m_pRenderer, m_pTime);
     Mesh* pShipMesh = m_pAssetManager->LoadMesh("Models/Ship.obj");
-    Color playerColor(0, 0.5f, 1.f);
+    Color playerColor(0, 0.5f, 0.7f);
     //Material* pMaterialPlayer = m_pAssetManager->LoadMaterial("DefaultMaterial", "VertexShader.glsl", "FragmentShader.glsl", playerColor);
     Material* pMaterialPlayer = m_pAssetManager->CreateMaterialInstance("DefaultMaterial");
 
     //Factory creates player
-    GameObject* pPlayer = factory.CreatePlayer(m_pGame);
+    GameObject* pPlayer = m_pGameObjectFactory->CreatePlayer(m_pGame);
     RenderComponent* pRenderComponent = pPlayer->GetComponent<RenderComponent>(k_renderComponentID);
     pRenderComponent->Init(pShipMesh, pMaterialPlayer);
     pRenderComponent->SetColor(playerColor);
@@ -139,29 +163,48 @@ GameObject* SpawnManager::SpawnPlayer(Vector3 position)
 //  Create Enemy Function
 //      -Internal function to handle the logic to create an enemy
 //-------------------------------------------------------------------------------------- -
+
+#include "EnemyAIComponent.h"
+
 GameObject* SpawnManager::CreateEnemy(float x, float y)
 {
     Mesh* pEnemyShipMesh = m_pAssetManager->LoadMesh("Models/Ship_Enemy.obj");
-
-    //Create color
-    Color enemyColor(1.f / (float)(rand() % 5 + 1), 0, 0);
-    Color defaultColor = Color::m_colors[ColorPreset::k_red];
-
-    //Material* pMaterialEnemy = m_pAssetManager->LoadMaterial("EnemyMaterial", "VertexShader.glsl", "FragmentShader.glsl", defaultColor);
     Material* pMaterialEnemy = m_pAssetManager->CreateMaterialInstance("EnemyMaterial");
 
     //Factory creates enemy
-    GameObjectFactory factory(m_pRenderer, m_pTime);
-    GameObject* pEnemy = factory.CreateEnemy(m_pGame, m_pGame->GetPlayerPointer());
+    GameObject* pEnemy = m_pGameObjectFactory->CreateEnemy(m_pGame, m_pGame->GetPlayerPointer());
     RenderComponent* pRenderComponent = pEnemy->GetComponent<RenderComponent>(k_renderComponentID);
     pRenderComponent->Init(pEnemyShipMesh, pMaterialEnemy);
+
+    //Create color
+    float randColorVal = 1.f / (float)((rand() % 5) + 1) * 5;
+    Color enemyColor;
+
+    //Randomize Enemy Type
+    EnemyAIComponent* pAIComponent = pEnemy->GetComponent<EnemyAIComponent>(k_EnemyAIComponentID);
+    int randVal = rand() % 2;
+
+    //Assigning enemy Type
+    if (randVal == 0)
+    {
+        pAIComponent->SetBehavior(EnemyBehaviorType::k_chaser);
+        enemyColor.r = randColorVal;
+    }
+    else
+    {
+        pAIComponent->SetBehavior(EnemyBehaviorType::k_floater);
+        enemyColor.r = randColorVal;
+        enemyColor.g = 0.5f;
+    }
+
+    //Assign Color
     pRenderComponent->SetColor(enemyColor);
 
     //Set position
     Vector3 enemyPos(x, 0.f, y);
     pEnemy->GetTransformComponent()->SetPosition(enemyPos.x, enemyPos.y, enemyPos.z);
 
-    float scale = 1.0f / ((float)(rand() % 4));
+    float scale = 1.0f / ((float)((rand() % 4) + 1) * 1);
     pEnemy->GetTransformComponent()->Scale(scale, scale, scale);
 
     return pEnemy;
@@ -175,9 +218,9 @@ void SpawnManager::CreateEnemySpawns()
 {
     m_pEnemySpawnPositions = new Vector3[k_enemySpawnPositionCount]
     {
-        Vector3(0, 0, 50)
-            , Vector3(0, 0, -50)
-            , Vector3(-50, 0, 0)
-            , Vector3(50, 0, 0)
+        Vector3(50, 0, 50)
+            , Vector3(50, 0, -50)
+            , Vector3(-50, 0, 50)
+            , Vector3(50, 0, 50)
     };
 }

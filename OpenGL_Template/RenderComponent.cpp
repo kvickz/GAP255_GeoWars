@@ -131,17 +131,11 @@ void RenderComponent::Update()
 
     //Rotate
     //TODO: Figure out a good way to do world rotation
-    cml::matrix_rotate_about_local_x(objectRotation, m_rotationReference->x);
-    cml::matrix_rotate_about_local_y(objectRotation, m_rotationReference->y);
-    cml::matrix_rotate_about_local_z(objectRotation, m_rotationReference->z);
-    
-    //Vector3 worldRot = m_pTransform->GetWorldRotation();
-    //worldRot.Zero();
-    /*cml::matrix_rotate_about_local_x(objectRotation, worldRot.x);
-    cml::matrix_rotate_about_local_y(objectRotation, worldRot.y);
-    cml::matrix_rotate_about_local_z(objectRotation, worldRot.z);*/
-    //cml::matrix_rotation_euler(objectRotation, worldRot.x, worldRot.y, worldRot.z, cml::euler_order_xyz);
-    //cml::matrix_rotation_
+    Vector3 rotation(m_rotationReference->x * k_deg2Rad
+                     , m_rotationReference->y * k_deg2Rad
+                     , m_rotationReference->z * k_deg2Rad);
+
+    cml::matrix_rotation_euler(objectRotation, rotation.x, rotation.y, rotation.z, cml::euler_order_xyz);
 
     //Translate
     //This one is efficient but only grabs local position
@@ -190,6 +184,13 @@ void RenderComponent::SetColor(Color color)
 {
     m_pMaterial->SetColor(color);
     glUniform3f(m_materialColorUniform, color.r, color.g, color.b);
+}
+
+void RenderComponent::SetColor(float r, float g, float b)
+{
+    Color color(r, g, b);
+    m_pMaterial->SetColor(color);
+    glUniform3f(m_materialColorUniform, r, g, b);
 }
 
 //-------------------------------------------------------------------------------------- -

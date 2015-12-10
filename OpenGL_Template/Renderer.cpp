@@ -41,7 +41,7 @@ void Renderer::Init()
     unsigned int debug = glewInit();
 
     //Setting clear color
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 
     //Setting polygon mode
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

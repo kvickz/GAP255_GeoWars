@@ -27,9 +27,9 @@ CameraComponent* GameObjectComponentFactory::CreateCameraComponent(GameObject* p
 }
 
 //RIGIDBODY
-Rigidbody* GameObjectComponentFactory::CreateRigidbodyComponent(GameObject* pGameObject, TransformComponent* pTransform)
+Rigidbody* GameObjectComponentFactory::CreateRigidbodyComponent(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem)
 {
-    Rigidbody* pComponent = new Rigidbody(pGameObject, pTransform);
+    Rigidbody* pComponent = new Rigidbody(pGameObject, pTransform, pCollisionSystem);
 
     return pComponent;
 }
@@ -49,3 +49,32 @@ EnemyAIComponent* GameObjectComponentFactory::CreateEnemyAIComponent(GameObject*
 
 	return pComponent;
 }
+
+//COLLIDER
+Collider* GameObjectComponentFactory::CreateCollider(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem, Rigidbody* pRigidbody)
+{
+    Collider* pComponent = new Collider(pGameObject, pTransform, pCollisionSystem, pRigidbody);
+
+    return pComponent;
+}
+
+//CHARACTER STATS
+CharacterStats* GameObjectComponentFactory::CreateCharacterStats(GameObject* pGameObject, TransformComponent* pTransform)
+{
+    CharacterStats* pComponent = new CharacterStats(pGameObject, pTransform);
+
+    return pComponent;
+}
+
+//***************************
+//  FUNCTION TEMPLATE
+//***************************
+/*
+//
+* GameObjectComponentFactory::Create(GameObject* pGameObject, TransformComponent* pTransform)
+{
+    * pComponent = new (pGameObject, pTransform);
+
+    return pComponent;
+}
+*/
