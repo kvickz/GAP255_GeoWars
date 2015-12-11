@@ -49,8 +49,9 @@ public:
     GameObject* SpawnCamera(Vector3 position, Vector3 rotation);
     GameObject* SpawnWall(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices);
     GameObject* SpawnPlayer(Vector3 position);
+    GameObject* SpawnParticle(Vector3 position);
 
-    virtual void OnEvent(const Event* pEvent) override;
+    virtual void OnEvent(Event* pEvent) override;
 
 private:
     GameObject* CreateEnemy(float x, float y);

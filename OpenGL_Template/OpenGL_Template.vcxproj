@@ -107,6 +107,8 @@
     <ClCompile Include="EnemyFloaterBehavior.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventSystem.cpp" />
+    <ClCompile Include="ParticleCollisionResponse.cpp" />
+    <ClCompile Include="ParticleComponent.cpp" />
     <ClCompile Include="PlayerChaserBehavior.cpp" />
     <ClCompile Include="PlayerCollisionResponse.cpp" />
     <ClCompile Include="SpawnManager.cpp" />
@@ -150,6 +152,8 @@
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Macros.h" />
+    <ClInclude Include="ParticleCollisionResponse.h" />
+    <ClInclude Include="ParticleComponent.h" />
     <ClInclude Include="PlayerChaserBehavior.h" />
     <ClInclude Include="PlayerCollisionResponse.h" />
     <ClInclude Include="SpawnManager.h" />

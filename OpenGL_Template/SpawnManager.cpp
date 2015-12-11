@@ -23,9 +23,9 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , m_pAssetManager(pAssetManager)
     , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(10)
+    , m_enemySpawnInterval(20)
     , m_enemySpawnIndex(0)
-    , m_enemySpawnLimit(100)
+    , m_enemySpawnLimit(50)
     , m_enemySpawnCount(0)
     , m_enemyTimer(0)
 {
@@ -78,8 +78,17 @@ void SpawnManager::Update()
         if (m_enemySpawnIndex >= k_enemySpawnPositionCount)
             m_enemySpawnIndex = 0;
 
-        if (m_enemySpawnCount < m_enemySpawnLimit)
+        //Spawn Enemy
+        if (m_enemySpawnCount < m_enemySpawnLimit) {
             m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
+
+            const int k_numOfParticles = 5;
+            for (int i = 0; i < k_numOfParticles; ++i)
+            {
+                //Vector3 position(i * 2, 0, 0);
+                //m_pGame->AddGameObject(SpawnParticle(position));
+            }
+        }
     }
 }
 
@@ -97,16 +106,23 @@ void SpawnManager::RegisterForEvents()
 //-------------------------------------------------------------------------------------- -
 //  On Event Function
 //-------------------------------------------------------------------------------------- -
-void SpawnManager::OnEvent(const Event* pEvent)
+void SpawnManager::OnEvent(Event* pEvent)
 {
     switch (pEvent->GetEventID())
     {
     case k_enemyDeathEvent:
-
-        if (m_enemySpawnCount == 0)
-            int debug = 0;
-
         DecreaseSpawnCounter();
+
+        //Get position of death
+        EnemyDeathEvent* enemyDeathEvent = static_cast<EnemyDeathEvent*>(pEvent);
+        Vector3 position = enemyDeathEvent->GetLocation();
+
+        //Spawn particles
+        const int k_numOfParticles = 16;
+        for (int i = 0; i < k_numOfParticles; ++i)
+        {
+            m_pGame->AddGameObject(SpawnParticle(position));
+        }
         break;
     }
 }
@@ -190,6 +206,26 @@ GameObject* SpawnManager::SpawnPlayer(Vector3 position)
     pPlayer->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
 
     return pPlayer;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Spawn Particle Function
+//-------------------------------------------------------------------------------------- -
+GameObject* SpawnManager::SpawnParticle(Vector3 position)
+{
+    Mesh* pParticleMesh = m_pAssetManager->LoadMesh("Models/Particle1.obj");
+    Color particleColor(0.5f, 0.5f, 0.9f);
+    Material* pMaterialParticle = m_pAssetManager->CreateMaterialInstance("DefaultMaterial");
+
+    GameObject* pParticleObject = m_pGameObjectFactory->CreateParticle(m_pGame);
+    RenderComponent* pRenderComponent = pParticleObject->GetComponent<RenderComponent>(k_renderComponentID);
+    pRenderComponent->Init(pParticleMesh, pMaterialParticle);
+    pRenderComponent->SetColor(particleColor);
+
+    //Position
+    pParticleObject->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
+
+    return pParticleObject;
 }
 
 //-------------------------------------------------------------------------------------- -

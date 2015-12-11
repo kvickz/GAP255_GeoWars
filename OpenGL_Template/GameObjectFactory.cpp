@@ -6,6 +6,7 @@
 
 #include "PlayerCollisionResponse.h"
 #include "EnemyCollisionResponse.h"
+#include "ParticleCollisionResponse.h"
 
 GameObjectFactory::GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager)
     :k_pRenderer(pRenderer)
@@ -143,4 +144,39 @@ GameObject* GameObjectFactory::CreateEnemy(Game* pGame, GameObject* pTarget)
     pCollider->SetCollisionResponse(pCollisionResponse);
 
 	return pObject;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Create Particle Object
+//-------------------------------------------------------------------------------------- -
+GameObject* GameObjectFactory::CreateParticle(Game* pGame)
+{
+    GameObjectComponentFactory componentFactory;
+    GameObject* pObject = new GameObject(k_particleID, pGame);
+
+    //Add Transform Component
+    TransformComponent* pTransform = componentFactory.CreateTransformComponent(pObject);
+    pObject->AddComponent(k_transformComponentID, pTransform);
+
+    //Add Render Component
+    RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
+    pObject->AddComponent(k_renderComponentID, pRenderComponent);
+
+    //Add Rigidbody
+    Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform, k_pCollisionSystem);
+    pRigidbody->SetMass(0.6f);
+    pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
+
+    //Add Particle Component
+    ParticleComponent* pParticleComponent = componentFactory.CreateParticleComponent(pObject, pTransform, pRigidbody);
+    pObject->AddComponent(pParticleComponent->GetComponentID(), pParticleComponent);
+
+    //Add Collider
+    Collider* pCollider = componentFactory.CreateCollider(pObject, pTransform, k_pCollisionSystem, pRigidbody);
+    pObject->AddComponent(pCollider->GetComponentID(), pCollider);
+    ParticleCollisionResponse* pCollisionResponse = new ParticleCollisionResponse(pRigidbody, pParticleComponent);
+    pCollider->SetCollisionResponse(pCollisionResponse);
+    pCollider->SetRadius(0.5f);
+
+    return pObject;
 }

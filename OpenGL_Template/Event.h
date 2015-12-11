@@ -5,6 +5,8 @@
 
 #include "Constants.h"
 
+#include "Vector3.h"
+
 class Event
 {
 private:
@@ -30,8 +32,12 @@ public:
 //PLAYER DEATH EVENT
 class EnemyDeathEvent : public Event
 {
+private:
+    Vector3 m_location;
 public:
-    EnemyDeathEvent();
+    EnemyDeathEvent(Vector3 location);
+
+    const Vector3 GetLocation() { return m_location; }
 };
 
 #endif // !EVENT_H

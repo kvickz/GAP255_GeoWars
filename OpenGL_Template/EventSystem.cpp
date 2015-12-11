@@ -34,7 +34,7 @@ void EventSystem::RemoveListener(const EventID& eventID, EventListener* pEventLi
     
 }
 
-void EventSystem::TriggerEvent(const Event* pEvent)
+void EventSystem::TriggerEvent(Event* pEvent)
 {
     auto findIt = m_listeners.find(pEvent->GetEventID());
     if (findIt == m_listeners.end())

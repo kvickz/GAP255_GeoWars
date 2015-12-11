@@ -115,6 +115,12 @@
     <ClCompile Include="Event.cpp">
       <Filter>Core\EventSystem</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleCollisionResponse.cpp">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -251,6 +257,12 @@
     </ClInclude>
     <ClInclude Include="EventListener.h">
       <Filter>Core\EventSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleCollisionResponse.h">
+      <Filter>GameObject\CollisionResponses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

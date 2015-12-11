@@ -11,6 +11,7 @@ struct Collision;
 class CollisionResponse
 {
 protected:
+    //TODO: Remove dependency on rigidbody
     Rigidbody* m_pRigidbody;
 
 public:

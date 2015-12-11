@@ -22,6 +22,7 @@ const ObjectID k_cameraID = 2;
 const ObjectID k_playerID = 3;
 const ObjectID k_enemy_1ID = 4;
 const ObjectID k_wallID = 10;
+const ObjectID k_particleID = 11;
 //***********************************************
 
 //***********************************************
@@ -35,6 +36,7 @@ const ComponentID k_rigidbodyComponentID = 5;
 const ComponentID k_EnemyAIComponentID = 6;
 const ComponentID k_ColliderComponentID = 7;
 const ComponentID k_CharacterStatsComponentID = 8;
+const ComponentID k_ParticleComponentID = 9;
 //***********************************************
 
 //***********************************************

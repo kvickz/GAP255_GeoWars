@@ -12,9 +12,11 @@ struct Collision
     ObjectID m_objectID;
     Vector3 m_force;
     Vector3 m_direction;
+    Vector3 m_position;
 
-    Collision(Vector3 force, ObjectID objectID)
+    Collision(Vector3 force, Vector3 position, ObjectID objectID)
         :m_objectID(objectID)
+        , m_position(position)
         , m_force(force)
     {
         m_direction = m_force.Normalized();

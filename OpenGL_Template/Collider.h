@@ -33,12 +33,11 @@ public:
     bool CheckCollision(Collider* pOther);
     void SetRadius(float value) { m_radius = value; }
     void SetCollisionResponse(CollisionResponse* pCollisionResponse);
-
-    void OnCollision(Collision collision);
-    Vector3 GetForce();
-
     bool HasCollidedThisFrame() { return m_collidedThisFrame; }
-
+    void OnCollision(Collision collision);
+    
+    Vector3 GetForce();
+    float GetMass();
 private:
     float GetRadius() { return m_radius; }
     Vector3 GetPosition();

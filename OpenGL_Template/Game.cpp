@@ -152,7 +152,7 @@ int Game::Update()
 //  On Event Function
 //-------------------------------------------------------------------------------------- -
 
-void Game::OnEvent(const Event* pEvent)
+void Game::OnEvent(Event* pEvent)
 {
     switch (pEvent->GetEventID())
     {

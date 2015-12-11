@@ -21,7 +21,7 @@ PlayerCollisionResponse::PlayerCollisionResponse(Rigidbody* pRigidbody, Characte
 
 void PlayerCollisionResponse::Execute(Collision collision)
 {
-    m_pRigidbody->AddForce(collision.m_force.x / 2, collision.m_force.z / 2);
+    m_pRigidbody->AddForce(collision.m_force.x, collision.m_force.z);
 
     switch (collision.m_objectID)
     {
@@ -30,5 +30,4 @@ void PlayerCollisionResponse::Execute(Collision collision)
         m_pRigidbody->GetEventSystem()->TriggerEvent(new PlayerDeathEvent());
         break;
     }
-    
 }

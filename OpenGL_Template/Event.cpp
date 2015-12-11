@@ -25,8 +25,8 @@ PlayerDeathEvent::PlayerDeathEvent()
 //***************************************************************************************
 //  ENEMY DEATH EVENT
 //***************************************************************************************
-EnemyDeathEvent::EnemyDeathEvent()
+EnemyDeathEvent::EnemyDeathEvent(Vector3 location)
     :Event(k_enemyDeathEvent)
 {
-
+    m_location = Vector3(location);
 }

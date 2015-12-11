@@ -59,7 +59,7 @@ private:
 
     SpawnManager* m_pEnemySpawner;
 
-    virtual void OnEvent(const Event* pEvent) override;
+    virtual void OnEvent(Event* pEvent) override;
 
 public:
     Game();

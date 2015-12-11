@@ -58,6 +58,11 @@ Vector3 Collider::GetForce()
     return m_pRigidbody->GetVelocity();
 }
 
+float Collider::GetMass()
+{
+    return m_pRigidbody->GetMass();
+}
+
 Vector3 Collider::GetPosition()
 {
     return m_pTransform->GetPosition();

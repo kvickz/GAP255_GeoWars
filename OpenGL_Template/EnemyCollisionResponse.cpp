@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Collision.h"
+#include "TransformComponent.h"
 
 #include "EventSystem.h"
 #include "Event.h"
@@ -26,7 +27,8 @@ void EnemyCollisionResponse::Execute(Collision collision)
     switch (collision.m_objectID)
     {
     case k_playerID:
-        m_pRigidbody->GetEventSystem()->TriggerEvent(new EnemyDeathEvent());
+        Vector3 location = m_pRigidbody->GetTransform()->GetPosition();
+        m_pRigidbody->GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
         m_pRigidbody->GetGameObject()->DeleteObject();
         break;
     }

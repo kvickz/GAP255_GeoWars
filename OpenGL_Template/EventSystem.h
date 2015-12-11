@@ -26,7 +26,7 @@ public:
     void RegisterListener(const EventID& eventID, EventListener* pEventListener);
     void RemoveListener(const EventID& eventID, EventListener* pEventListener);
 
-    void TriggerEvent(const Event* pEvent);
+    void TriggerEvent(Event* pEvent);
 };
 
 #endif // !EVENTSYSTEM_H

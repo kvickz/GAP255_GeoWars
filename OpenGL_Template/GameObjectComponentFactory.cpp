@@ -66,6 +66,14 @@ CharacterStats* GameObjectComponentFactory::CreateCharacterStats(GameObject* pGa
     return pComponent;
 }
 
+//PARTICLE
+ParticleComponent* GameObjectComponentFactory::CreateParticleComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
+{
+    ParticleComponent* pComponent = new ParticleComponent(pGameObject, pTransform, pRigidbody);
+
+    return pComponent;
+}
+
 //***************************
 //  FUNCTION TEMPLATE
 //***************************

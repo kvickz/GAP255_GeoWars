@@ -10,6 +10,7 @@ Rigidbody::Rigidbody(GameObject* pGameObject, TransformComponent* pTransform, Co
     :GameObjectComponent(k_rigidbodyComponentID, pGameObject, pTransform)
     , m_dragFactor(0.9f)
     , m_pCollisionSystem(pCollisionSystem)
+    , m_mass(1.f)
 {
     m_pCollisionSystem->RegisterRigidbody(this);
 }
@@ -38,8 +39,8 @@ void Rigidbody::AddDrag()
 void Rigidbody::AddForce(float x, float y)
 {
 	//Adding velocity
-    m_velocity.x += x;
-    m_velocity.y += y;
+    m_velocity.x += x / m_mass;
+    m_velocity.y += y / m_mass;
 }
 
 #include "GameObject.h"

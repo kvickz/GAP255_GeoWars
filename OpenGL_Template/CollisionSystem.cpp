@@ -3,6 +3,7 @@
 #include "CollisionSystem.h"
 
 #include "Rigidbody.h"
+#include "TransformComponent.h"
 #include "Collider.h"
 #include "Collision.h"
 
@@ -56,15 +57,15 @@ void CollisionSystem::CheckForCollisions()
                 continue;
             
             //Get the forces
-            Vector3 forceA = m_colliders[i]->GetForce();
-            Vector3 forceB = m_colliders[j]->GetForce();
+            Vector3 forceA = m_colliders[i]->GetForce() * m_colliders[i]->GetMass();
+            Vector3 forceB = m_colliders[j]->GetForce() * m_colliders[j]->GetMass();
 
             //Calculate the result
             CalculateCollisionForces(forceA, forceB);
 
             //Create Collision Objects
-            Collision collisionA(forceB, m_colliders[j]->GetGameObjectID());
-            Collision collisionB(forceA, m_colliders[i]->GetGameObjectID());
+            Collision collisionA(forceB, m_colliders[j]->GetTransform()->GetPosition(), m_colliders[j]->GetGameObjectID());
+            Collision collisionB(forceA, m_colliders[i]->GetTransform()->GetPosition(), m_colliders[i]->GetGameObjectID());
 
             //Execute collision behavior
             m_colliders[i]->OnCollision(collisionA);

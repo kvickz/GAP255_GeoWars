@@ -9,7 +9,7 @@ class EventListener
 {
 public:
     virtual ~EventListener() {}
-    virtual void OnEvent(const Event* pEvent) = 0;
+    virtual void OnEvent(Event* pEvent) = 0;
 };
 
 #endif // !EVENTLISTENER_H

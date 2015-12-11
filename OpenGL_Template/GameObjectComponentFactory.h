@@ -8,11 +8,14 @@
 #include "TransformComponent.h"
 #include "RenderComponent.h"
 #include "CameraComponent.h"
+#include "ParticleComponent.h"
+#include "CharacterStats.h"
 #include "CharacterController.h"
 #include "EnemyAIComponent.h"
 #include "CharacterStats.h"
 #include "Collider.h"
 #include "Rigidbody.h"
+
 
 #include "Constants.h"
 
@@ -32,6 +35,7 @@ public:
 	EnemyAIComponent* CreateEnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget);
     Collider* CreateCollider(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem, Rigidbody* pRigidbody);
     CharacterStats* CreateCharacterStats(GameObject* pGameObject, TransformComponent* pTransform);
+    ParticleComponent* CreateParticleComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody);
 
     //Function Template
     //* Create(GameObject* pGameObject, TransformComponent* pTransform);
