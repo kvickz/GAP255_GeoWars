@@ -31,6 +31,9 @@ void MovePlayerCommand::Execute()
     //m_pCharacterController->SetMovementScaleX(valueX);
     //m_pCharacterController->SetMovementScaleY(valueY);
 
+    if (valueX == 0 && valueY == 0)
+        return;
+
     m_pCharacterController->Move((float)valueX, (float)valueY);
 }
 

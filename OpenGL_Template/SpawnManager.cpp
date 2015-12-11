@@ -11,6 +11,9 @@
 #include "Time.h"
 #include "Game.h"
 
+#include "EventSystem.h"
+#include "Event.h"
+
 #include "Macros.h"
 
 //-------------------------------------------------------------------------------------- -
@@ -23,7 +26,7 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , m_pAssetManager(pAssetManager)
     , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(20)
+    , m_enemySpawnInterval(50)
     , m_enemySpawnIndex(0)
     , m_enemySpawnLimit(50)
     , m_enemySpawnCount(0)
@@ -49,6 +52,8 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
 //-------------------------------------------------------------------------------------- -
 SpawnManager::~SpawnManager()
 {
+    m_pGame->GetEventSystem()->RegisterListener(k_enemyDeathEvent, this);
+
     SAFE_DELETE(m_pEnemySpawnPositions);
     SAFE_DELETE(m_pGameObjectFactory);
 
@@ -91,9 +96,6 @@ void SpawnManager::Update()
         }
     }
 }
-
-#include "EventSystem.h"
-#include "Event.h"
 
 //-------------------------------------------------------------------------------------- -
 //  Register For Events Function

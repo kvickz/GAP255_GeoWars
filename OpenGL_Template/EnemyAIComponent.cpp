@@ -9,8 +9,12 @@
 #include "TransformComponent.h"
 #include "GameObject.h"
 
+#include "EventSystem.h"
+#include "Event.h"
+
 #include "Constants.h"
 #include "Vector3.h"
+#include "Macros.h"
 
 #include <math.h>
 
@@ -37,10 +41,8 @@ EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* 
     std::pair<float, float> m_possibleSpeeds(0.3f, 0.7f);
 
     m_moveSpeed = static_cast<float>(rand() / (static_cast<float>(RAND_MAX / (m_possibleSpeeds.second - m_possibleSpeeds.first))));
-    //m_possibleSpeeds.first = 0.3f;
-    //m_possibleSpeeds.second = 0.7f;
 
-    //SetBehavior(EnemyBehaviorType::k_floater);
+    RegisterForEvents();
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -48,14 +50,45 @@ EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* 
 //-------------------------------------------------------------------------------------- -
 EnemyAIComponent::~EnemyAIComponent()
 {
-    delete m_pBehavior;
-    m_pBehavior = nullptr;
+    m_pGameObject->GetEventSystem()->RemoveListener(k_playerDeathEvent, this);
+
+    SAFE_DELETE(m_pBehavior);
 }
 
+//-------------------------------------------------------------------------------------- -
+//  Update
+//-------------------------------------------------------------------------------------- -
 void EnemyAIComponent::Update()
 {
     if (m_pBehavior)
         m_pBehavior->Execute();
+}
+
+//-------------------------------------------------------------------------------------- -
+//  On Event Function
+//-------------------------------------------------------------------------------------- -
+
+void EnemyAIComponent::OnEvent(Event* pEvent)
+{
+    //When player dies, all enemies die
+    switch (pEvent->GetEventID())
+    {
+    case k_playerDeathEvent:
+        Kill();
+        break;
+    }
+}
+
+void EnemyAIComponent::RegisterForEvents()
+{
+    m_pGameObject->GetEventSystem()->RegisterListener(k_playerDeathEvent, this);
+}
+
+void EnemyAIComponent::Kill()
+{
+    Vector3 location = GetTransform()->GetPosition();
+    GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
+    GetGameObject()->DeleteObject();
 }
 
 //-------------------------------------------------------------------------------------- -

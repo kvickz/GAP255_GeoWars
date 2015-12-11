@@ -133,6 +133,9 @@
     <ClCompile Include="BulletCollisionResponse.cpp">
       <Filter>GameObject\CollisionResponses</Filter>
     </ClCompile>
+    <ClCompile Include="EventListener.cpp">
+      <Filter>Core\EventSystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">

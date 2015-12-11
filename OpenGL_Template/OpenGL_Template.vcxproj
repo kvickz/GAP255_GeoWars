@@ -108,6 +108,7 @@
     <ClCompile Include="EnemyCollisionResponse.cpp" />
     <ClCompile Include="EnemyFloaterBehavior.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventListener.cpp" />
     <ClCompile Include="EventSystem.cpp" />
     <ClCompile Include="GunComponent.cpp" />
     <ClCompile Include="ParticleCollisionResponse.cpp" />

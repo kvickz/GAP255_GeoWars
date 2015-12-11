@@ -2,6 +2,7 @@
 
 #include "EnemyCollisionResponse.h"
 
+#include "EnemyAIComponent.h"
 #include "GameObject.h"
 #include "Rigidbody.h"
 #include "Collision.h"
@@ -27,10 +28,11 @@ void EnemyCollisionResponse::Execute(Collision collision)
     switch (collision.m_objectID)
     {
     case k_playerID:    //PLAYER
-        KillEnemy();
+        m_pEnemyAIComponent->Kill();
         break;
     case k_bulletID:    //BULLET
-        KillEnemy();
+        m_pEnemyAIComponent->Kill();
+        //KillEnemy();
         break;
     }
 }

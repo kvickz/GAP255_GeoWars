@@ -25,6 +25,7 @@ public:
 
     void RegisterListener(const EventID& eventID, EventListener* pEventListener);
     void RemoveListener(const EventID& eventID, EventListener* pEventListener);
+    //void RemoveListener(EventListener* pEventListener);
 
     void TriggerEvent(Event* pEvent);
 };

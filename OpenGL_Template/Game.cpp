@@ -45,6 +45,8 @@ Game::Game()
 //-------------------------------------------------------------------------------------- -
 Game::~Game()
 {
+    GetEventSystem()->RemoveListener(k_playerDeathEvent, this);
+
     SAFE_DELETE(m_pRenderer);
     SAFE_DELETE(m_pAssetManager);
     SAFE_DELETE(m_pInputManager);

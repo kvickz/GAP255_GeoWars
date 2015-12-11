@@ -16,7 +16,7 @@ GunComponent::GunComponent(GameObject* pGameObject, TransformComponent* pTransfo
     :GameObjectComponent(k_gunComponentID, pGameObject, pTransform)
     , m_pSpawnManager(pSpawnManager)
     , m_bulletSpeed(2.f)
-    , m_bulletOffset(3.f)
+    , m_bulletOffset(5.f)
     , k_shootCooldownSet(250)
     , m_shootCooldown(k_shootCooldownSet)
     , m_gunCooled(true)
@@ -54,7 +54,7 @@ void GunComponent::Shoot()
     //Offset the bullet's position from the player's position
     Vector3 position = Vector3(m_pTransform->GetPosition());
     position.x += xPos;
-    position.y += yPos;
+    position.z += yPos;
 
     GameObject* pObject = m_pSpawnManager->SpawnBullet(position);
     BulletController* pBulletController = pObject->GetComponent<BulletController>(k_bulletComponentID);
