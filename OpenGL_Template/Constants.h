@@ -13,6 +13,7 @@ typedef unsigned int ObjectID;
 typedef unsigned int ObjectInstanceID;
 typedef unsigned int EventID;
 typedef unsigned int EventInstanceID;
+typedef signed short AxisValue;
 
 //***********************************************
 //  OBJECT IDS
@@ -53,6 +54,8 @@ const EventID k_enemyDeathEvent = 1;
 //  CONSTANT VALUES
 //***********************************************
 const int k_maxIntValue = 0x7fffffff;
+const int k_maxShortIntValue = 0x7fff;
+const AxisValue k_maxStickInputValue = 0x7fff; // 32767;  //1/2 of the max short value
 const float k_rad2Deg = 57.295779f; //Converts Radians to Degrees
 const float k_deg2Rad = 0.0174532f; //Converts Degrees to Radians
 //***********************************************

@@ -4,16 +4,18 @@
 
 #include "Game.h"
 #include "GameObject.h"
-#include "Constants.h"
 
 #include "CameraMoveCommand.h"
 #include "CameraRotateCommand.h"
 #include "MovePlayerCommand.h"
 #include "ShootCommand.h"
 
-#include "TransformComponent.h"
+#include "Constants.h"
+#include "Macros.h"
 
 #include <SDL.h>
+#include <Windows.h>
+#include <Xinput.h>
 
 //-------------------------------------------------------------------------------------- -
 //  Input Manager Constructor
@@ -21,10 +23,20 @@
 InputManager::InputManager(Game* pGame)
     :m_pGame(pGame)
     , k_mouseSensitivity(100000)
+    , m_pKeyboardCommands(nullptr)
+    , m_pControllerCommands(nullptr)
     , m_mouseXInverted(false)
     , m_mouseYInverted(false)
+    , m_controllerActive(false)
+    , m_keyboardActive(false)
+    , m_controller_LeftYInverted(false)
 {
-    //
+    //If a controller exists, create controller bindings
+    if (SDL_NumJoysticks() > 0)
+    {
+        m_pController = SDL_GameControllerOpen(0);
+        m_controllerActive = true;
+    }
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -32,8 +44,11 @@ InputManager::InputManager(Game* pGame)
 //-------------------------------------------------------------------------------------- -
 void InputManager::Init()
 {
-    m_pKeyboardCommands = new KeyboardCommands();
-    m_pControllerCommands = new ControllerCommands();
+    if (m_keyboardActive)
+        m_pKeyboardCommands = new KeyboardCommands();
+
+    if (m_controllerActive)
+        m_pControllerCommands = new ControllerCommands();
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -68,7 +83,7 @@ InputManager::KeyboardCommands::~KeyboardCommands()
 //-------------------------------------------------------------------------------------- -
 InputManager::ControllerCommands::ControllerCommands()
 {
-    m_axis_LeftStickX = nullptr;
+    m_axis_LeftStick = nullptr;
 }
 //-------------------------------------------------------------------------------------- -
 //  Controller Commands Destructor
@@ -76,7 +91,8 @@ InputManager::ControllerCommands::ControllerCommands()
 //-------------------------------------------------------------------------------------- -
 InputManager::ControllerCommands::~ControllerCommands()
 {
-    delete m_axis_LeftStickX;
+    delete m_axis_LeftStick;
+    delete m_rightTrigger;
 }
 //****************************************************************************************
 //-------------------------------------------------------------------------------------- -
@@ -91,9 +107,22 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
 
     //[???] Why doesn't this work with a static_cast like in my GameObject::GetComponent?
     //CameraComponent* pCamComponent = pGameObject->GetComponentReinterpret<CameraComponent>(k_cameraComponentID);
-    m_pKeyboardCommands->axis_XYZ = new MovePlayerCommand(pGameObject);
-    m_pKeyboardCommands->m_shootCommand = new ShootCommand(pGameObject);
     //m_pKeyboardCommands->axis_XYZ_rotation = new CameraRotateCommand(pGameObject, pCamComponent);
+
+    //KEYBOARD BINDINGS
+    if (m_keyboardActive)
+    {
+        m_pKeyboardCommands->axis_XYZ = new MovePlayerCommand(pGameObject);
+        m_pKeyboardCommands->m_shootCommand = new ShootCommand(pGameObject);
+    }
+
+    //CONTROLLER BINDINGS
+    if (m_controllerActive)
+    {
+        m_pControllerCommands->m_axis_LeftStick = new MovePlayerCommand(pGameObject);
+        m_pControllerCommands->m_rightTrigger = new ShootCommand(pGameObject);
+    }
+    
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -103,7 +132,12 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
 //-------------------------------------------------------------------------------------- -
 int InputManager::HandleEvents()
 {
-    ResetUpdateVariables();
+    //TODO: This is kind of janky, maybe make more elegant
+    if (m_keyboardActive)
+    {
+        ResetUpdateVariables();
+    }
+    
 
     SDL_Event appEvent;
     while (SDL_PollEvent(&appEvent))
@@ -274,17 +308,89 @@ int InputManager::HandleEvents()
         //Gathers mouse x and y
         m_currentMousePosition.x = appEvent.button.x;
         m_currentMousePosition.y = appEvent.button.y;
+
+    }
+
+    //CONTROLLER PROCESSING
+    if (m_controllerActive)
+    {
+        //If user hits start, exit
+        if (!ProcessControllerEvents())
+            return false;
     }
 
     //Applies held down key logic
-    ApplyKeyboardInput();
+    if (m_keyboardActive)
+    {
+        ApplyKeyboardInput();
+        m_pKeyboardCommands->axis_XYZ->Execute();
+    }
+    
     ApplyMouseInput();
 
     //Execute Command Objects
-    m_pKeyboardCommands->axis_XYZ->Execute();
     //m_pKeyboardCommands->axis_XYZ_rotation->Execute();
 
     return 1;   //SUCCESS
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Apply Controller Input
+//      -This applies the logic from an attached controller
+//-------------------------------------------------------------------------------------- -
+bool InputManager::ProcessControllerEvents()
+{
+    /*
+    //A Button
+    if (SDL_GameControllerGetButton(m_ppControllers[playerIndex], SDL_CONTROLLER_BUTTON_A))
+    {
+        m_pControllerCommandStructs[playerIndex].controllerButton_A->Execute();
+    }
+
+    //Right Shoulder
+    if (SDL_GameControllerGetButton(m_ppControllers[playerIndex], SDL_CONTROLLER_BUTTON_RIGHTSHOULDER))
+    {
+        m_pControllerCommandStructs[playerIndex].controllerButton_RightShoulder->Execute();
+    }
+
+    //Left Shoulder
+    if (SDL_GameControllerGetButton(m_ppControllers[playerIndex], SDL_CONTROLLER_BUTTON_LEFTSHOULDER))
+    {
+        m_pControllerCommandStructs[playerIndex].controllerButton_LeftShoulder->Execute();
+    }
+
+    //Left Trigger
+    if (SDL_GameControllerGetAxis(m_ppControllers[playerIndex], SDL_CONTROLLER_AXIS_TRIGGERLEFT))
+    {
+        m_pControllerCommandStructs[playerIndex].controllerButton_LeftTrigger->Execute();
+    }
+    */
+
+    //START BUTTON
+    if (SDL_GameControllerGetButton(m_pController, SDL_CONTROLLER_BUTTON_START))
+    {
+        return false;	//TODO: Maybe try to eventually replace this with a pause menu
+    }
+
+    //Right Trigger
+    if (SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
+    {
+        m_pControllerCommands->m_rightTrigger->Execute();
+    }
+
+    //Left Stick Movement
+    AxisValue xInputValue = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTX);
+    AxisValue yInputValue = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTY);
+
+    //TODO: There's probably a more elegant way to do this
+    if (m_controller_LeftYInverted)
+        yInputValue *= -1;
+
+    m_pControllerCommands->m_axis_LeftStick->SetAxisXValue(xInputValue);
+    m_pControllerCommands->m_axis_LeftStick->SetAxisYValue(-yInputValue);
+    m_pControllerCommands->m_axis_LeftStick->Execute();
+    
+    return true;
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -296,13 +402,13 @@ void InputManager::ApplyKeyboardInput()
     // A KEY
     if (m_AKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(-k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(-k_maxStickInputValue);
     }
 
     // D KEY
     if (m_DKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(k_maxStickInputValue);
     }
 
     // Q KEY
@@ -320,25 +426,25 @@ void InputManager::ApplyKeyboardInput()
     // W KEY
     if (m_WKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxStickInputValue);
     }
 
     // S KEY
     if (m_SKey_Pressed)
     {
-		m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxStickInputValue);
     }
 
     // R KEY
     if (m_RKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(k_maxStickInputValue);
     }
 
     // F KEY
     if (m_FKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(-k_maxIntValue);
+        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(-k_maxStickInputValue);
     }
 
     //SPACE BAR

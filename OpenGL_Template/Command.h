@@ -5,13 +5,11 @@
 
 class GameObject;
 
-typedef int AxisValue;
+#include "Constants.h"
 
 class Command
 {
 protected:
-    //TODO: Check coding standards for static const
-    static const AxisValue k_maxStickInputValue = 0x7fffffff;
     static const AxisValue k_deadZoneRange = 8000;
 
     GameObject* const m_pGameObject;

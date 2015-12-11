@@ -16,7 +16,7 @@ GunComponent::GunComponent(GameObject* pGameObject, TransformComponent* pTransfo
     :GameObjectComponent(k_gunComponentID, pGameObject, pTransform)
     , m_pSpawnManager(pSpawnManager)
     , m_bulletSpeed(2.f)
-    , m_bulletOffset(5.f)
+    , m_bulletOffset(10.f)
     , k_shootCooldownSet(250)
     , m_shootCooldown(k_shootCooldownSet)
     , m_gunCooled(true)

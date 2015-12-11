@@ -3,6 +3,8 @@
 #ifndef TIME_H
 #define TIME_H
 
+//TODO: Maybe put this into a namespace
+
 class Time
 {
 private:

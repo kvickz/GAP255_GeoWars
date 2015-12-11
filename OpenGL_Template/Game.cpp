@@ -138,9 +138,8 @@ int Game::Update()
     //      currently with the game components drawing themselves its a bit wonky
     m_pRenderer->ClearScreen();
 
-    //Updating objs
+    //Updating Game Logic & Objects
     UpdateGameLogic();
-    UpdateGameObjects();
 
     m_pRenderer->SwapWindow();
 
@@ -179,7 +178,8 @@ void Game::UpdateGameLogic()
 {
     m_pEnemySpawner->Update();
     m_pCollisionSystem->Update();
-    
+    UpdateGameObjects();
+
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
     //m_gameObjects[0]->GetTransformComponent()->Rotate(0.1f, 0.f, 0.f);

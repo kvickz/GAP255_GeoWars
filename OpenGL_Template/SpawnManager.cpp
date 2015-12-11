@@ -26,7 +26,7 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , m_pAssetManager(pAssetManager)
     , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(50)
+    , m_enemySpawnInterval(10)
     , m_enemySpawnIndex(0)
     , m_enemySpawnLimit(50)
     , m_enemySpawnCount(0)

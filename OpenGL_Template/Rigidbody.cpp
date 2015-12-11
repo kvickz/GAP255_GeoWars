@@ -46,6 +46,7 @@ void Rigidbody::AddForce(float x, float y)
 #include "GameObject.h"
 #include "Game.h"
 
+//TODO: Refactor this logic out to the collider
 void Rigidbody::CheckForLevelBarrier()
 {
 	Game* pGame = m_pGameObject->GetGame();

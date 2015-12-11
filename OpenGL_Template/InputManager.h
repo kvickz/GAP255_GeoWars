@@ -5,6 +5,9 @@
 
 #include "Vector2.h"
 
+#include "SDL_joystick.h"
+#include "SDL_gamecontroller.h"
+
 class Game;
 class Command;
 class GameObject;
@@ -25,7 +28,8 @@ private:
 
     struct ControllerCommands
     {
-        Command* m_axis_LeftStickX;
+        Command* m_axis_LeftStick;
+        Command* m_rightTrigger;
 
         ControllerCommands();
         ~ControllerCommands();
@@ -33,6 +37,11 @@ private:
 
     KeyboardCommands* m_pKeyboardCommands;
     ControllerCommands* m_pControllerCommands;
+
+    SDL_GameController* m_pController;
+
+    bool m_keyboardActive;
+    bool m_controllerActive;
 
     //TODO: I haven't thought this through completely, probably not necessary
     bool m_WKey_Pressed = false;
@@ -66,6 +75,12 @@ private:
     Vector2_i m_mouseDragOffset_Right;
     //****************************//
 
+    //****************************//
+    //****************************//
+    bool m_controller_LeftYInverted;
+
+    //****************************//
+
 public:
     InputManager(Game* pGame);
     ~InputManager();
@@ -79,6 +94,7 @@ private:
     void ApplyKeyboardInput();
     void ApplyMouseInput();
     void ResetUpdateVariables();
+    bool ProcessControllerEvents();
 };
 
 #endif // !INPUTMANAGER_H
