@@ -3,10 +3,11 @@
 #ifndef GAMEOBJECTCOMPONENT_H
 #define GAMEOBJECTCOMPONENT_H
 
-typedef unsigned int ComponentID;
+#include "Constants.h"
 
 class GameObject;
 class TransformComponent;
+class EventSystem;
 
 class GameObjectComponent
 {
@@ -28,8 +29,9 @@ public:
 
     TransformComponent* GetTransform() { return m_pTransform; }
     GameObject* GetGameObject() { return m_pGameObject; }
-    ComponentID GetComponentID() { return m_componentID; }
+    const ComponentID GetGameObjectID();
+    const ComponentID GetComponentID() { return m_componentID; }
+    EventSystem* const GetEventSystem();
 };
 
 #endif // !GAMEOBJECTCOMPONENT_H
-

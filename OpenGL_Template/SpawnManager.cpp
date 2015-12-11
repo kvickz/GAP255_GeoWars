@@ -23,10 +23,14 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , m_pAssetManager(pAssetManager)
     , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(20)
+    , m_enemySpawnInterval(10)
     , m_enemySpawnIndex(0)
+    , m_enemySpawnLimit(100)
+    , m_enemySpawnCount(0)
     , m_enemyTimer(0)
 {
+    RegisterForEvents();
+
     CreateEnemySpawns();
 
     //Create Factory
@@ -74,7 +78,36 @@ void SpawnManager::Update()
         if (m_enemySpawnIndex >= k_enemySpawnPositionCount)
             m_enemySpawnIndex = 0;
 
-        //m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
+        if (m_enemySpawnCount < m_enemySpawnLimit)
+            m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
+    }
+}
+
+#include "EventSystem.h"
+#include "Event.h"
+
+//-------------------------------------------------------------------------------------- -
+//  Register For Events Function
+//-------------------------------------------------------------------------------------- -
+void SpawnManager::RegisterForEvents()
+{
+    m_pGame->GetEventSystem()->RegisterListener(k_enemyDeathEvent, this);
+}
+
+//-------------------------------------------------------------------------------------- -
+//  On Event Function
+//-------------------------------------------------------------------------------------- -
+void SpawnManager::OnEvent(const Event* pEvent)
+{
+    switch (pEvent->GetEventID())
+    {
+    case k_enemyDeathEvent:
+
+        if (m_enemySpawnCount == 0)
+            int debug = 0;
+
+        DecreaseSpawnCounter();
+        break;
     }
 }
 
@@ -121,12 +154,12 @@ GameObject* SpawnManager::SpawnCamera(Vector3 position, Vector3 rotation)
 //  Spawn Wall Function
 //      -Spawns a wall!
 //-------------------------------------------------------------------------------------- -
-GameObject* SpawnManager::SpawnWall(std::vector<float> vertices, std::vector<unsigned int> indices)
+GameObject* SpawnManager::SpawnWall(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices)
 {
     //Create Wall
     GameObject* pWall = m_pGameObjectFactory->CreateWall(m_pGame, vertices, indices);
 
-    Mesh* pWallMesh = m_pAssetManager->GenerateQuad("WallMesh", vertices, indices);
+    Mesh* pWallMesh = m_pAssetManager->GenerateQuad(meshKey, vertices, indices);
     Material* pMaterialWall = m_pAssetManager->CreateMaterialInstance("EnemyMaterial");
 
     RenderComponent* pRenderComponent = pWall->GetComponent<RenderComponent>(k_renderComponentID);
@@ -168,6 +201,8 @@ GameObject* SpawnManager::SpawnPlayer(Vector3 position)
 
 GameObject* SpawnManager::CreateEnemy(float x, float y)
 {
+    IncreaseSpawnCounter();
+
     Mesh* pEnemyShipMesh = m_pAssetManager->LoadMesh("Models/Ship_Enemy.obj");
     Material* pMaterialEnemy = m_pAssetManager->CreateMaterialInstance("EnemyMaterial");
 
@@ -184,6 +219,8 @@ GameObject* SpawnManager::CreateEnemy(float x, float y)
     EnemyAIComponent* pAIComponent = pEnemy->GetComponent<EnemyAIComponent>(k_EnemyAIComponentID);
     int randVal = rand() % 2;
 
+    //randVal = 1;
+
     //Assigning enemy Type
     if (randVal == 0)
     {
@@ -193,8 +230,8 @@ GameObject* SpawnManager::CreateEnemy(float x, float y)
     else
     {
         pAIComponent->SetBehavior(EnemyBehaviorType::k_floater);
-        enemyColor.r = randColorVal;
-        enemyColor.g = 0.5f;
+        enemyColor.r = randColorVal / 3;
+        enemyColor.g = 1.0f;
     }
 
     //Assign Color
@@ -220,7 +257,17 @@ void SpawnManager::CreateEnemySpawns()
     {
         Vector3(50, 0, 50)
             , Vector3(50, 0, -50)
+            , Vector3(-50, 0, -50)
             , Vector3(-50, 0, 50)
-            , Vector3(50, 0, 50)
     };
+}
+
+void SpawnManager::DecreaseSpawnCounter()
+{ 
+    --m_enemySpawnCount; 
+}
+
+void SpawnManager::IncreaseSpawnCounter()
+{ 
+    ++m_enemySpawnCount; 
 }

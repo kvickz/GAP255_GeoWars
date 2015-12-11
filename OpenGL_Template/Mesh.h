@@ -26,8 +26,6 @@ private:
     std::vector<unsigned int> m_indices;
 
 public:
-    //[???] I get an error saying no default constructor available if this is commented out
-    //      but I don't know why. I'm not calling the default constructor from anywhere.
     Mesh() {};
     Mesh(const char* const fileName);
     Mesh(std::vector<float> pVertices, std::vector<unsigned int> pIndices);

@@ -17,7 +17,7 @@ private:
 public:
     PlayerCollisionResponse(Rigidbody* pRigidbody, CharacterController* pCharacterController, RenderComponent* pRenderComponent);
 
-    virtual void Execute(Vector3 force);
+    virtual void Execute(Collision collision);
 };
 
 #endif // !PLAYERCOLLISIONRESPONSE_H

@@ -50,7 +50,7 @@ void Collider::OnCollision(Collision collision)
     m_collidedThisFrame = true;
 
     if (m_pCollisionResponse)
-        m_pCollisionResponse->Execute(collision.m_force);
+        m_pCollisionResponse->Execute(collision);
 }
 
 Vector3 Collider::GetForce()

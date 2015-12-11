@@ -16,7 +16,7 @@ private:
 public:
     EnemyCollisionResponse(Rigidbody* pRigidbody, EnemyAIComponent* pEnemyAIComponent);
 
-    virtual void Execute(Vector3 force);
+    virtual void Execute(Collision collision);
 };
 
 #endif // !ENEMYCOLLISIONRESPONSE_H

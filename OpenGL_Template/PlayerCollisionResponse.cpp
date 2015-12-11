@@ -4,6 +4,12 @@
 
 #include "RenderComponent.h"
 #include "Rigidbody.h"
+#include "Collision.h"
+
+#include "EventSystem.h"
+#include "Event.h"
+
+#include "Constants.h"
 
 PlayerCollisionResponse::PlayerCollisionResponse(Rigidbody* pRigidbody, CharacterController* pCharacterController, RenderComponent* pRenderComponent)
     :CollisionResponse(pRigidbody)
@@ -13,9 +19,16 @@ PlayerCollisionResponse::PlayerCollisionResponse(Rigidbody* pRigidbody, Characte
     //
 }
 
-void PlayerCollisionResponse::Execute(Vector3 force)
+void PlayerCollisionResponse::Execute(Collision collision)
 {
-    m_pRigidbody->AddForce(force.x / 2, force.z / 2);
+    m_pRigidbody->AddForce(collision.m_force.x / 2, collision.m_force.z / 2);
 
-    m_pRenderComponent->SetColor(1.f, 1.f, 1.f);
+    switch (collision.m_objectID)
+    {
+    case k_enemy_1ID:
+        m_pRenderComponent->SetColor(1.f, 1.f, 1.f);
+        m_pRigidbody->GetEventSystem()->TriggerEvent(new PlayerDeathEvent());
+        break;
+    }
+    
 }

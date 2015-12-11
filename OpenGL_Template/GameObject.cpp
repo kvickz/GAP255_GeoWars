@@ -133,3 +133,11 @@ void GameObject::DeleteObject()
 {
     MarkForRemoval();
 }
+
+//-------------------------------------------------------------------------------------- -
+//  Get Event System Function
+//-------------------------------------------------------------------------------------- -
+EventSystem* const GameObject::GetEventSystem() const
+{ 
+    return m_pGame->GetEventSystem();
+}

@@ -6,11 +6,16 @@
 #include "InputManager.h"
 #include "SpawnManager.h"
 #include "CollisionSystem.h"
+#include "EventSystem.h"
+#include "Event.h"
 #include "FileLoader.h"
 #include "Time.h"
 
+#include "Mesh.h"
+#include "GameObjectFactory.h"
 #include "GameObject.h"
 #include "Vector3.h"
+
 #include "Macros.h"
 
 #include <math.h>
@@ -25,9 +30,12 @@ Game::Game()
     , m_pInputManager(nullptr)
     , m_pEnemySpawner(nullptr)
     , m_pCollisionSystem(nullptr)
+    , m_pEventSystem(nullptr)
     , m_pCamera(nullptr)
     , m_pTime(nullptr)
     , m_pPlayer(nullptr)
+    , m_numOfWalls(0)
+    , m_currentScore(0)
 {
     //
 }
@@ -43,11 +51,10 @@ Game::~Game()
     SAFE_DELETE(m_pTime);
     SAFE_DELETE(m_pEnemySpawner);
     SAFE_DELETE(m_pCollisionSystem);
+    SAFE_DELETE(m_pEventSystem);
 
     m_pCamera = nullptr;
 }
-
-#include "RenderComponent.h"
 
 //-------------------------------------------------------------------------------------- -
 //  Main Game Initialization Function
@@ -56,6 +63,7 @@ Game::~Game()
 //-------------------------------------------------------------------------------------- -
 void Game::Init()
 {
+    m_pEventSystem = new EventSystem();
     m_pRenderer = new Renderer();
     m_pRenderer->Init();
 
@@ -65,8 +73,19 @@ void Game::Init()
     m_pCollisionSystem = new CollisionSystem();
     m_pEnemySpawner = new SpawnManager(this, m_pRenderer, m_pTime, m_pAssetManager, m_pCollisionSystem);
 
+    RegisterForEvents();
     CreateGameObjects();
 	InitializeGameObjects();
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Register For Events Function
+//      -Registers for all necessary gameplay events.
+//-------------------------------------------------------------------------------------- -
+void Game::RegisterForEvents()
+{
+    m_pEventSystem->RegisterListener(k_playerDeathEvent, this);
+    m_pEventSystem->RegisterListener(k_enemyDeathEvent, this);
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -83,7 +102,7 @@ void Game::CreateGameObjects()
     const int k_numOfEnemies = 55;
     for (int i = 0; i < k_numOfEnemies; ++i)
 	{
-		CreateEnemy(rand() % 30 * 5.f - 25, 45.f);
+		//CreateEnemy(rand() % 30 * 5.f - 25, 45.f);
 	}
 }
 
@@ -118,8 +137,8 @@ int Game::Update()
     m_pRenderer->ClearScreen();
 
     //Updating objs
-    UpdateGameObjects();
     UpdateGameLogic();
+    UpdateGameObjects();
 
     m_pRenderer->SwapWindow();
 
@@ -130,13 +149,35 @@ int Game::Update()
 }
 
 //-------------------------------------------------------------------------------------- -
+//  On Event Function
+//-------------------------------------------------------------------------------------- -
+
+void Game::OnEvent(const Event* pEvent)
+{
+    switch (pEvent->GetEventID())
+    {
+        case k_playerDeathEvent:
+        {
+            int debug = 0;
+            break;
+        }
+        case k_enemyDeathEvent:
+        {
+            m_currentScore += 50;
+            break;
+        }
+    }
+}
+
+//-------------------------------------------------------------------------------------- -
 //  Update Game Logic Function
 //      -Runs any custom game logic
 //-------------------------------------------------------------------------------------- -
 void Game::UpdateGameLogic()
 {
-    m_pCollisionSystem->Update();
     m_pEnemySpawner->Update();
+    m_pCollisionSystem->Update();
+    
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
     //m_gameObjects[0]->GetTransformComponent()->Rotate(0.1f, 0.f, 0.f);
@@ -239,10 +280,12 @@ void Game::DeleteAllObjects()
 //**************************
 //	Create the level
 //**************************
+#include "StringMerger.h"
+
 void Game::InitLevelBoundaries()
 {
 	const int k_halfLevelWidth = 80;
-	const int k_halfLevelHeight = 50;
+	const int k_halfLevelHeight = 60;
     const float k_height = 0.1f;
 	m_levelBoundaries.left = -k_halfLevelWidth;
 	m_levelBoundaries.right = k_halfLevelWidth;
@@ -253,34 +296,33 @@ void Game::InitLevelBoundaries()
     for (int i = 0; i < 1; ++i)
     {
         float distanceBetweenLines = 1.f;
-        float left = m_levelBoundaries.left - i * (distanceBetweenLines * i);
-        float right = m_levelBoundaries.right + i * (distanceBetweenLines * i);
-        float top = m_levelBoundaries.top - i * (distanceBetweenLines * i);
-        float bottom = m_levelBoundaries.bottom + i * (distanceBetweenLines * i);
+        float left = m_levelBoundaries.left - i * (distanceBetweenLines);
+        float right = m_levelBoundaries.right + i * (distanceBetweenLines);
+        float top = m_levelBoundaries.top + i * (distanceBetweenLines);
+        float bottom = m_levelBoundaries.bottom - i * (distanceBetweenLines);
 
-        //Left
-        CreateWall(left, bottom, left, top, k_height);
+        const std::string k_wallKey = "WallMesh_";
         
-        //TODO: Figure out a resolution to the hashtable collision issue
+        //Left
+        CreateWall(k_wallKey, left, bottom, left, top, k_height);
         //Close
-        //CreateWall(left, top, right, top, k_height);
+        CreateWall(k_wallKey, left, top, right, top, k_height);
         //Right
-        /*
-        CreateWall(right, top, right, bottom, k_height);
+        CreateWall(k_wallKey, right, top, right, bottom, k_height);
         //Far
-        CreateWall(right, bottom, left, bottom, k_height);
-        */
+        CreateWall(k_wallKey, right, bottom, left, bottom, k_height);
     }
 }
 
-#include "Mesh.h"
-#include "GameObjectFactory.h"
-
 //**************************
 //  Creating a wall from...
-//                      Point A                         Point B                         Height
-void Game::CreateWall(float pointA_x, float pointA_y, float pointB_x, float pointB_y, float height)
+//                                          Point A                         Point B                         Height
+void Game::CreateWall(std::string meshKey, float pointA_x, float pointA_y, float pointB_x, float pointB_y, float height)
 {
+    //Create Unique key for each wall
+    ++m_numOfWalls;
+    meshKey = StringMerger::StringWithInt(meshKey, m_numOfWalls);
+
     std::vector<float> verts;
     std::vector<unsigned int> indices;
 
@@ -314,7 +356,7 @@ void Game::CreateWall(float pointA_x, float pointA_y, float pointB_x, float poin
     indices.push_back(3);
     indices.push_back(0);
 
-    AddGameObject(m_pEnemySpawner->SpawnWall(verts, indices));
+    AddGameObject(m_pEnemySpawner->SpawnWall(meshKey, verts, indices));
 }
 
 //**************************

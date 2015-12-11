@@ -40,7 +40,7 @@ EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* 
     //m_possibleSpeeds.first = 0.3f;
     //m_possibleSpeeds.second = 0.7f;
 
-    //SetBehavior(EnemyBehaviorType::k_chaser);
+    //SetBehavior(EnemyBehaviorType::k_floater);
 }
 
 //-------------------------------------------------------------------------------------- -

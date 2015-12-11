@@ -4,6 +4,7 @@
 #define COLLISIONRESPONSE_H
 
 class Rigidbody;
+struct Collision;
 
 #include "Vector3.h"
 
@@ -16,7 +17,7 @@ public:
     CollisionResponse(Rigidbody* pRigidbody);
     virtual ~CollisionResponse() {};
 
-    virtual void Execute(Vector3 force) = 0;
+    virtual void Execute(Collision collision) = 0;
 };
 
 #endif // !COLLISIONRESPONSE_H

@@ -79,7 +79,7 @@ GameObject* GameObjectFactory::CreateCamera(Game* pGame)
 GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
 {
     GameObjectComponentFactory componentFactory;
-    GameObject* pObject = new GameObject(k_characterControllerComponentID, pGame);
+    GameObject* pObject = new GameObject(k_playerID, pGame);
 
     //Add Transform Component
     TransformComponent* pTransform = componentFactory.CreateTransformComponent(pObject);
@@ -102,6 +102,8 @@ GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
     PlayerCollisionResponse* pCollisionResponse = new PlayerCollisionResponse(pRigidbody, pCharacterControllerComponent, pRenderComponent);
     pCollider->SetCollisionResponse(pCollisionResponse);
     pObject->AddComponent(pCollider->GetComponentID(), pCollider);
+
+
 
     return pObject;
 }

@@ -18,6 +18,8 @@ typedef std::unordered_map<std::string, Material*> MaterialContainer;
 class AssetManager
 {
 private:
+    unsigned int m_generatedMeshes;
+
     MeshContainer m_meshes;
     MaterialContainer m_materials;
 

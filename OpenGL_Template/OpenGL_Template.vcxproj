@@ -105,6 +105,8 @@
     <ClCompile Include="EnemyAIComponent.cpp" />
     <ClCompile Include="EnemyCollisionResponse.cpp" />
     <ClCompile Include="EnemyFloaterBehavior.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventSystem.cpp" />
     <ClCompile Include="PlayerChaserBehavior.cpp" />
     <ClCompile Include="PlayerCollisionResponse.cpp" />
     <ClCompile Include="SpawnManager.cpp" />
@@ -122,6 +124,7 @@
     <ClCompile Include="RenderComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
+    <ClCompile Include="StringMerger.cpp" />
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="TransformComponent.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -143,6 +146,8 @@
     <ClInclude Include="EnemyBehavior.h" />
     <ClInclude Include="EnemyCollisionResponse.h" />
     <ClInclude Include="EnemyFloaterBehavior.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventListener.h" />
     <ClInclude Include="EventSystem.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="PlayerChaserBehavior.h" />
@@ -165,6 +170,7 @@
     <ClInclude Include="RenderComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Rigidbody.h" />
+    <ClInclude Include="StringMerger.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="TransformComponent.h" />
     <ClInclude Include="Utility.h" />

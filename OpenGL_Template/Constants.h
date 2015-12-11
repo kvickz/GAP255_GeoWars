@@ -10,6 +10,9 @@
 //***********************************************
 typedef unsigned int ComponentID;
 typedef unsigned int ObjectID;
+typedef unsigned int ObjectInstanceID;
+typedef unsigned int EventID;
+typedef unsigned int EventInstanceID;
 
 //***********************************************
 //  OBJECT IDS
@@ -32,6 +35,13 @@ const ComponentID k_rigidbodyComponentID = 5;
 const ComponentID k_EnemyAIComponentID = 6;
 const ComponentID k_ColliderComponentID = 7;
 const ComponentID k_CharacterStatsComponentID = 8;
+//***********************************************
+
+//***********************************************
+//  EVENT IDS
+//***********************************************
+const EventID k_playerDeathEvent = 0;
+const EventID k_enemyDeathEvent = 1;
 //***********************************************
 
 //***********************************************

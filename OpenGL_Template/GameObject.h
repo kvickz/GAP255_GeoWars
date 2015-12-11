@@ -5,13 +5,12 @@
 
 #include <unordered_map>
 
+#include "Constants.h"
+
 class GameObjectComponent;
 class TransformComponent;
+class EventSystem;
 class Game;
-
-typedef unsigned int ComponentID;
-typedef unsigned int ObjectInstanceID;
-typedef unsigned int ObjectID;
 
 class GameObject
 {
@@ -43,7 +42,9 @@ public:
     void AddComponent(const ComponentID key, GameObjectComponent* pNewComponent);
     void RemoveComponent(const ComponentID key);
 
+    const ObjectID GetObjectID() { return k_objectID; }
     Game* GetGame() { return m_pGame; }
+    EventSystem* const GetEventSystem() const;
 
     //----------------------------------------------------------------------------------
     //  Get Component Functions

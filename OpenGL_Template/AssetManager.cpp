@@ -10,6 +10,7 @@
 //  Constructor
 //-------------------------------------------------------------------------------------- -
 AssetManager::AssetManager()
+    :m_generatedMeshes(0)
 {
     //
 }
@@ -62,6 +63,11 @@ Mesh* AssetManager::LoadMesh(const char* const pFileName)
 
 Mesh* AssetManager::GenerateQuad(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices)
 {
+    if (meshKey == "" || vertices.empty() || indices.empty())
+        return nullptr;
+
+    ++m_generatedMeshes;
+
     Mesh* pNewMesh = new Mesh(vertices, indices);
     m_meshes.emplace(meshKey, pNewMesh);
 

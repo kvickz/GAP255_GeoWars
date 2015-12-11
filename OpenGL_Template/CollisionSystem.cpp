@@ -4,6 +4,7 @@
 
 #include "Rigidbody.h"
 #include "Collider.h"
+#include "Collision.h"
 
 //-------------------------------------------------------------------------------------- -
 //  Constructor
@@ -42,28 +43,32 @@ void CollisionSystem::CheckForCollisions()
     {
         for (unsigned int j = 0; j < m_colliders.size(); ++j)
         {
+            //Dont check an object colliding with itself
             if (i == j)
                 continue;
 
-            bool collided = m_colliders[i]->CheckCollision(m_colliders[j]);
-
-            //if either object has collided this frame, ignore it
-            if (m_colliders[i]->HasCollidedThisFrame() || m_colliders[j]->HasCollidedThisFrame())
+            //if !collided
+            if (!m_colliders[i]->CheckCollision(m_colliders[j]))
                 continue;
 
-            if (collided)
-            {
-                //Get the forces
-                Vector3 forceA = m_colliders[i]->GetForce();
-                Vector3 forceB = m_colliders[j]->GetForce();
+            //if either object has already collided this frame, ignore it
+            if (m_colliders[i]->HasCollidedThisFrame() || m_colliders[j]->HasCollidedThisFrame())
+                continue;
+            
+            //Get the forces
+            Vector3 forceA = m_colliders[i]->GetForce();
+            Vector3 forceB = m_colliders[j]->GetForce();
 
-                //Calculate the result
-                CalculateCollisionForces(forceA, forceB);
+            //Calculate the result
+            CalculateCollisionForces(forceA, forceB);
 
-                //Execute collision behavior
-                m_colliders[i]->OnCollision(forceB);
-                m_colliders[j]->OnCollision(forceA);
-            }
+            //Create Collision Objects
+            Collision collisionA(forceB, m_colliders[j]->GetGameObjectID());
+            Collision collisionB(forceA, m_colliders[i]->GetGameObjectID());
+
+            //Execute collision behavior
+            m_colliders[i]->OnCollision(collisionA);
+            m_colliders[j]->OnCollision(collisionB);
         }
     }
 }
