@@ -121,6 +121,18 @@
     <ClCompile Include="ParticleCollisionResponse.cpp">
       <Filter>GameObject\CollisionResponses</Filter>
     </ClCompile>
+    <ClCompile Include="GunComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootCommand.cpp">
+      <Filter>CommandPattern</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletController.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BulletCollisionResponse.cpp">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -262,6 +274,18 @@
       <Filter>GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="ParticleCollisionResponse.h">
+      <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootCommand.h">
+      <Filter>CommandPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="GunComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletController.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletCollisionResponse.h">
       <Filter>GameObject\CollisionResponses</Filter>
     </ClInclude>
   </ItemGroup>

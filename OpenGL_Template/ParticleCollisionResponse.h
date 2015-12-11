@@ -12,7 +12,6 @@ class ParticleCollisionResponse : public CollisionResponse
 {
 private:
     ParticleComponent* m_pParticleComponent;
-    //RenderComponent* m_pRenderComponent;
 
 public:
     ParticleCollisionResponse(Rigidbody* pRigidbody, ParticleComponent* pParticle);

@@ -12,7 +12,7 @@
 #include "Macros.h"
 
 Collider::Collider(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem, Rigidbody* pRigidbody)
-    :GameObjectComponent(k_ColliderComponentID, pGameObject, pTransform)
+    :GameObjectComponent(k_colliderComponentID, pGameObject, pTransform)
     , m_pCollisionSystem(pCollisionSystem)
     , m_pCollisionResponse(nullptr)
     , m_collidedThisFrame(false)

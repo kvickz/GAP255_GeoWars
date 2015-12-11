@@ -92,6 +92,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="BulletCollisionResponse.cpp" />
+    <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
     <ClCompile Include="CameraMoveCommand.cpp" />
     <ClCompile Include="CameraRotateCommand.cpp" />
@@ -107,10 +109,12 @@
     <ClCompile Include="EnemyFloaterBehavior.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventSystem.cpp" />
+    <ClCompile Include="GunComponent.cpp" />
     <ClCompile Include="ParticleCollisionResponse.cpp" />
     <ClCompile Include="ParticleComponent.cpp" />
     <ClCompile Include="PlayerChaserBehavior.cpp" />
     <ClCompile Include="PlayerCollisionResponse.cpp" />
+    <ClCompile Include="ShootCommand.cpp" />
     <ClCompile Include="SpawnManager.cpp" />
     <ClCompile Include="FileLoader.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -134,6 +138,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="BulletCollisionResponse.h" />
+    <ClInclude Include="BulletController.h" />
     <ClInclude Include="CameraComponent.h" />
     <ClInclude Include="CameraRotateCommand.h" />
     <ClInclude Include="CharacterStats.h" />
@@ -151,11 +157,13 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
     <ClInclude Include="EventSystem.h" />
+    <ClInclude Include="GunComponent.h" />
     <ClInclude Include="Macros.h" />
     <ClInclude Include="ParticleCollisionResponse.h" />
     <ClInclude Include="ParticleComponent.h" />
     <ClInclude Include="PlayerChaserBehavior.h" />
     <ClInclude Include="PlayerCollisionResponse.h" />
+    <ClInclude Include="ShootCommand.h" />
     <ClInclude Include="SpawnManager.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="FileLoader.h" />

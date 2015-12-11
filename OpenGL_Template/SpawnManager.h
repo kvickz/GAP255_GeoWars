@@ -50,6 +50,7 @@ public:
     GameObject* SpawnWall(std::string meshKey, std::vector<float> vertices, std::vector<unsigned int> indices);
     GameObject* SpawnPlayer(Vector3 position);
     GameObject* SpawnParticle(Vector3 position);
+    GameObject* SpawnBullet(Vector3 position);
 
     virtual void OnEvent(Event* pEvent) override;
 

@@ -9,6 +9,7 @@
 #include "CameraMoveCommand.h"
 #include "CameraRotateCommand.h"
 #include "MovePlayerCommand.h"
+#include "ShootCommand.h"
 
 #include "TransformComponent.h"
 
@@ -22,6 +23,14 @@ InputManager::InputManager(Game* pGame)
     , k_mouseSensitivity(100000)
     , m_mouseXInverted(false)
     , m_mouseYInverted(false)
+{
+    //
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Input Manager Initialization Function
+//-------------------------------------------------------------------------------------- -
+void InputManager::Init()
 {
     m_pKeyboardCommands = new KeyboardCommands();
     m_pControllerCommands = new ControllerCommands();
@@ -49,20 +58,27 @@ InputManager::KeyboardCommands::~KeyboardCommands()
 {
     delete axis_XYZ;
     //delete axis_XYZ_rotation;
+    delete m_shootCommand;
 }
 
+//****************************************************************************************
+//-------------------------------------------------------------------------------------- -
+//  Controller Commands Constructor
+//      -Cleans up Controller Command Objects
+//-------------------------------------------------------------------------------------- -
+InputManager::ControllerCommands::ControllerCommands()
+{
+    m_axis_LeftStickX = nullptr;
+}
 //-------------------------------------------------------------------------------------- -
 //  Controller Commands Destructor
 //      -Cleans up Controller Command Objects
 //-------------------------------------------------------------------------------------- -
 InputManager::ControllerCommands::~ControllerCommands()
 {
-    if (!axis_LeftStickX)
-    {
-        delete axis_LeftStickX;
-    }
+    delete m_axis_LeftStickX;
 }
-
+//****************************************************************************************
 //-------------------------------------------------------------------------------------- -
 //  Add Player Function
 //      -Adds a user control to a gameobject if it has the appropriate component
@@ -71,9 +87,12 @@ InputManager::ControllerCommands::~ControllerCommands()
 //-------------------------------------------------------------------------------------- -
 void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
 {
+    Init();
+
     //[???] Why doesn't this work with a static_cast like in my GameObject::GetComponent?
     //CameraComponent* pCamComponent = pGameObject->GetComponentReinterpret<CameraComponent>(k_cameraComponentID);
     m_pKeyboardCommands->axis_XYZ = new MovePlayerCommand(pGameObject);
+    m_pKeyboardCommands->m_shootCommand = new ShootCommand(pGameObject);
     //m_pKeyboardCommands->axis_XYZ_rotation = new CameraRotateCommand(pGameObject, pCamComponent);
 }
 
@@ -148,6 +167,12 @@ int InputManager::HandleEvents()
             {
                 m_FKey_Pressed = true;
             }
+
+            //SPACE BAR
+            if (appEvent.key.keysym.sym == SDLK_SPACE)
+            {
+                m_spaceKey_Pressed = true;
+            }
         }
 
         //KEY UP EVENTS
@@ -199,6 +224,12 @@ int InputManager::HandleEvents()
             if (appEvent.key.keysym.sym == SDLK_f)
             {
                 m_FKey_Pressed = false;
+            }
+
+            //SPACE BAR
+            if (appEvent.key.keysym.sym == SDLK_SPACE)
+            {
+                m_spaceKey_Pressed = false;
             }
         }
         //-------------------------
@@ -310,7 +341,11 @@ void InputManager::ApplyKeyboardInput()
         m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(-k_maxIntValue);
     }
 
-    
+    //SPACE BAR
+    if (m_spaceKey_Pressed)
+    {
+        m_pKeyboardCommands->m_shootCommand->Execute();
+    }
 }
 
 //-------------------------------------------------------------------------------------- -

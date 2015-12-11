@@ -7,9 +7,11 @@
 #include "PlayerCollisionResponse.h"
 #include "EnemyCollisionResponse.h"
 #include "ParticleCollisionResponse.h"
+#include "BulletCollisionResponse.h"
 
-GameObjectFactory::GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager)
+GameObjectFactory::GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager)
     :k_pRenderer(pRenderer)
+    , k_pSpawnManager(pSpawnManager)
     , k_pAssetManager(pAssetManager)
     , k_pCollisionSystem(pCollisionSystem)
     , k_pTime(pTime)
@@ -104,7 +106,9 @@ GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
     pCollider->SetCollisionResponse(pCollisionResponse);
     pObject->AddComponent(pCollider->GetComponentID(), pCollider);
 
-
+    //Add Gun Component
+    GunComponent* pGunComponent = new GunComponent(pObject, pTransform, k_pSpawnManager);
+    pObject->AddComponent(pGunComponent->GetComponentID(), pGunComponent);
 
     return pObject;
 }
@@ -135,13 +139,13 @@ GameObject* GameObjectFactory::CreateEnemy(Game* pGame, GameObject* pTarget)
 
     //Add AI Component
     EnemyAIComponent* pEnemyAIComponent = componentFactory.CreateEnemyAIComponent(pObject, pTransform, pCharacterControllerComponent, pTarget);
-    pObject->AddComponent(k_EnemyAIComponentID, pEnemyAIComponent);
+    pObject->AddComponent(k_enemyAIComponentID, pEnemyAIComponent);
 
     //Add Collider
     Collider* pCollider = componentFactory.CreateCollider(pObject, pTransform, k_pCollisionSystem, pRigidbody);
-    pObject->AddComponent(pCollider->GetComponentID(), pCollider);
     EnemyCollisionResponse* pCollisionResponse = new EnemyCollisionResponse(pRigidbody, pEnemyAIComponent);
     pCollider->SetCollisionResponse(pCollisionResponse);
+    pObject->AddComponent(pCollider->GetComponentID(), pCollider);
 
 	return pObject;
 }
@@ -177,6 +181,41 @@ GameObject* GameObjectFactory::CreateParticle(Game* pGame)
     ParticleCollisionResponse* pCollisionResponse = new ParticleCollisionResponse(pRigidbody, pParticleComponent);
     pCollider->SetCollisionResponse(pCollisionResponse);
     pCollider->SetRadius(0.5f);
+
+    return pObject;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Create Bullet Object
+//-------------------------------------------------------------------------------------- -
+GameObject* GameObjectFactory::CreateBullet(Game* pGame)
+{
+    GameObjectComponentFactory componentFactory;
+    GameObject* pObject = new GameObject(k_bulletID, pGame);
+
+    //Add Transform Component
+    TransformComponent* pTransform = componentFactory.CreateTransformComponent(pObject);
+    pObject->AddComponent(k_transformComponentID, pTransform);
+
+    //Add Render Component
+    RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
+    pObject->AddComponent(k_renderComponentID, pRenderComponent);
+
+    //Add Rigidbody
+    Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform, k_pCollisionSystem);
+    pRigidbody->SetMass(0.6f);
+    pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
+
+    //Add Bullet Controller
+    BulletController* pBulletController = componentFactory.CreateBulletController(pObject, pTransform, pRigidbody);
+    pObject->AddComponent(pBulletController->GetComponentID(), pBulletController);
+
+    //Add Collider
+    Collider* pCollider = componentFactory.CreateCollider(pObject, pTransform, k_pCollisionSystem, pRigidbody);
+    pObject->AddComponent(pCollider->GetComponentID(), pCollider);
+    BulletCollisionResponse* pCollisionResponse = new BulletCollisionResponse(pRigidbody);
+    pCollider->SetCollisionResponse(pCollisionResponse);
+    pCollider->SetRadius(1.8f);
 
     return pObject;
 }

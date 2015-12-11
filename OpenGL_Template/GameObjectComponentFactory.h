@@ -13,12 +13,14 @@
 #include "CharacterController.h"
 #include "EnemyAIComponent.h"
 #include "CharacterStats.h"
+#include "GunComponent.h"
+#include "BulletController.h"
 #include "Collider.h"
 #include "Rigidbody.h"
 
-
 #include "Constants.h"
 
+class SpawnManager;
 class CollisionSystem;
 class GameObject;
 class Renderer;
@@ -36,6 +38,8 @@ public:
     Collider* CreateCollider(GameObject* pGameObject, TransformComponent* pTransform, CollisionSystem* pCollisionSystem, Rigidbody* pRigidbody);
     CharacterStats* CreateCharacterStats(GameObject* pGameObject, TransformComponent* pTransform);
     ParticleComponent* CreateParticleComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody);
+    GunComponent* CreateGunComponent(GameObject* pGameObject, TransformComponent* pTransform, SpawnManager* pSpawnManager);
+    BulletController* CreateBulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody);
 
     //Function Template
     //* Create(GameObject* pGameObject, TransformComponent* pTransform);

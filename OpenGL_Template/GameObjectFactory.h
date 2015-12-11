@@ -12,6 +12,7 @@
 class Game;
 class Renderer;
 class CollisionSystem;
+class SpawnManager;
 class AssetManager;
 class Time;
 
@@ -20,11 +21,12 @@ class GameObjectFactory
 private:
     AssetManager* const k_pAssetManager;
     CollisionSystem* const k_pCollisionSystem;
+    SpawnManager* const k_pSpawnManager;
     Renderer* const k_pRenderer;
     Time* const k_pTime;
 
 public:
-    GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager);
+    GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager);
 
     //TODO: Store pGame in the class instead of passing
     GameObject* CreatePlanet(Game* pGame);
@@ -33,5 +35,6 @@ public:
 	GameObject* CreateEnemy(Game* pGame, GameObject* pTarget);
     GameObject* CreateWall(Game* pGame, std::vector<float> vertices, std::vector<unsigned int> indices);
     GameObject* CreateParticle(Game* pGame);
+    GameObject* CreateBullet(Game* pGame);
 };
 #endif // !GAMEOBJECTFACTORY_H

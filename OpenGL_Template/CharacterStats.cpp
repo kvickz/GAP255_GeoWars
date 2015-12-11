@@ -5,7 +5,7 @@
 #include "Constants.h"
 
 CharacterStats::CharacterStats(GameObject* pGameObject, TransformComponent* pTransform)
-    :GameObjectComponent(k_CharacterStatsComponentID, pGameObject, pTransform)
+    :GameObjectComponent(k_characterStatsComponentID, pGameObject, pTransform)
 {
     //
 }

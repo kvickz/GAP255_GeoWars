@@ -18,7 +18,7 @@
 //  Constructor
 //-------------------------------------------------------------------------------------- -
 EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget)
-    :GameObjectComponent(k_EnemyAIComponentID, pGameObject, pTransform)
+    :GameObjectComponent(k_enemyAIComponentID, pGameObject, pTransform)
     , m_pCharController(pCharController)
     , m_pTarget(pTarget)
     , m_pBehavior(nullptr)

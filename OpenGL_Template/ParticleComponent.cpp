@@ -7,7 +7,7 @@
 #include "Time.h"
 
 ParticleComponent::ParticleComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
-    :GameObjectComponent(k_ParticleComponentID, pGameObject, pTransform)
+    :GameObjectComponent(k_particleComponentID, pGameObject, pTransform)
     , m_pRigidbody(pRigidbody)
 {
     m_lifeTimerSet = rand() % 500;

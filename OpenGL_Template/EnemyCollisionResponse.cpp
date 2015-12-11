@@ -26,11 +26,18 @@ void EnemyCollisionResponse::Execute(Collision collision)
 
     switch (collision.m_objectID)
     {
-    case k_playerID:
-        Vector3 location = m_pRigidbody->GetTransform()->GetPosition();
-        m_pRigidbody->GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
-        m_pRigidbody->GetGameObject()->DeleteObject();
+    case k_playerID:    //PLAYER
+        KillEnemy();
+        break;
+    case k_bulletID:    //BULLET
+        KillEnemy();
         break;
     }
-    
+}
+
+void EnemyCollisionResponse::KillEnemy()
+{
+    Vector3 location = m_pRigidbody->GetTransform()->GetPosition();
+    m_pRigidbody->GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
+    m_pRigidbody->GetGameObject()->DeleteObject();
 }

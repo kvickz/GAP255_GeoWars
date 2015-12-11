@@ -18,14 +18,16 @@ private:
     {
         Command* axis_XYZ;
         Command* axis_XYZ_rotation;
+        Command* m_shootCommand;
 
         ~KeyboardCommands();
     };
 
     struct ControllerCommands
     {
-        Command* axis_LeftStickX;
+        Command* m_axis_LeftStickX;
 
+        ControllerCommands();
         ~ControllerCommands();
     };
 
@@ -41,6 +43,7 @@ private:
     bool m_EKey_Pressed = false;
     bool m_RKey_Pressed = false;
     bool m_FKey_Pressed = false;
+    bool m_spaceKey_Pressed = false;
 
     //****************************//
     //      Mouse variables       //
@@ -67,6 +70,7 @@ public:
     InputManager(Game* pGame);
     ~InputManager();
 
+    void Init();
     int HandleEvents();
 
     void AddPlayer(unsigned int playerIndex, GameObject* pGameObject);

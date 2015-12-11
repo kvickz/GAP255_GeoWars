@@ -74,6 +74,22 @@ ParticleComponent* GameObjectComponentFactory::CreateParticleComponent(GameObjec
     return pComponent;
 }
 
+//GUN COMPONENT
+GunComponent* GameObjectComponentFactory::CreateGunComponent(GameObject* pGameObject, TransformComponent* pTransform, SpawnManager* pSpawnManager)
+{
+    GunComponent* pComponent = new GunComponent(pGameObject, pTransform, pSpawnManager);
+
+    return pComponent;
+}
+
+//BULLET CONTROLLER
+BulletController* GameObjectComponentFactory::CreateBulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
+{
+    BulletController* pComponent = new BulletController(pGameObject, pTransform, pRigidbody);
+
+    return pComponent;
+}
+
 //***************************
 //  FUNCTION TEMPLATE
 //***************************

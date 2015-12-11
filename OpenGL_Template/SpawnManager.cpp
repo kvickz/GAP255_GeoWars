@@ -34,7 +34,7 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     CreateEnemySpawns();
 
     //Create Factory
-    m_pGameObjectFactory = new GameObjectFactory(pRenderer, pTime, pCollisionSystem, m_pAssetManager);
+    m_pGameObjectFactory = new GameObjectFactory(pRenderer, pTime, pCollisionSystem, m_pAssetManager, this);
 
     //Load Necessary Materials
     Color playerDefaultColor(0, 0.5f, 1.f);
@@ -229,6 +229,27 @@ GameObject* SpawnManager::SpawnParticle(Vector3 position)
 }
 
 //-------------------------------------------------------------------------------------- -
+//  Spawn Bullet Function
+//-------------------------------------------------------------------------------------- -
+GameObject* SpawnManager::SpawnBullet(Vector3 position)
+{
+    Mesh* pParticleMesh = m_pAssetManager->LoadMesh("Models/Bullet.obj");
+    Color particleColor(1.0f, 0.5f, 0.5f);
+    Material* pMaterialParticle = m_pAssetManager->CreateMaterialInstance("DefaultMaterial");
+
+    GameObject* pBulletObject = m_pGameObjectFactory->CreateBullet(m_pGame);
+    RenderComponent* pRenderComponent = pBulletObject->GetComponent<RenderComponent>(k_renderComponentID);
+    pRenderComponent->Init(pParticleMesh, pMaterialParticle);
+    pRenderComponent->SetColor(particleColor);
+
+    //Position
+    pBulletObject->GetTransformComponent()->SetPosition(position.x, position.y, position.z);
+
+    m_pGame->AddGameObject(pBulletObject);
+    return pBulletObject;
+}
+
+//-------------------------------------------------------------------------------------- -
 //  Create Enemy Function
 //      -Internal function to handle the logic to create an enemy
 //-------------------------------------------------------------------------------------- -
@@ -252,7 +273,7 @@ GameObject* SpawnManager::CreateEnemy(float x, float y)
     Color enemyColor;
 
     //Randomize Enemy Type
-    EnemyAIComponent* pAIComponent = pEnemy->GetComponent<EnemyAIComponent>(k_EnemyAIComponentID);
+    EnemyAIComponent* pAIComponent = pEnemy->GetComponent<EnemyAIComponent>(k_enemyAIComponentID);
     int randVal = rand() % 2;
 
     //randVal = 1;
