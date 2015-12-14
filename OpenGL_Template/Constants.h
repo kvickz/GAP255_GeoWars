@@ -41,6 +41,7 @@ const ComponentID k_characterStatsComponentID = 8;
 const ComponentID k_particleComponentID = 9;
 const ComponentID k_gunComponentID = 10;
 const ComponentID k_bulletComponentID = 11;
+const ComponentID k_audioComponentID = 12;
 //***********************************************
 
 //***********************************************

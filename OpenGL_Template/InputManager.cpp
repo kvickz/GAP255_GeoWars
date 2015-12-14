@@ -9,6 +9,7 @@
 #include "CameraRotateCommand.h"
 #include "MovePlayerCommand.h"
 #include "ShootCommand.h"
+#include "BoostCommand.h"
 
 #include "Constants.h"
 #include "Macros.h"
@@ -28,7 +29,7 @@ InputManager::InputManager(Game* pGame)
     , m_mouseXInverted(false)
     , m_mouseYInverted(false)
     , m_controllerActive(false)
-    , m_keyboardActive(false)
+    , m_keyboardActive(true)
     , m_controller_LeftYInverted(false)
 {
     //If a controller exists, create controller bindings
@@ -84,6 +85,9 @@ InputManager::KeyboardCommands::~KeyboardCommands()
 InputManager::ControllerCommands::ControllerCommands()
 {
     m_axis_LeftStick = nullptr;
+    m_axis_RightStick = nullptr;
+    m_rightTrigger = nullptr;
+    m_leftTriggerPress = nullptr;
 }
 //-------------------------------------------------------------------------------------- -
 //  Controller Commands Destructor
@@ -93,6 +97,7 @@ InputManager::ControllerCommands::~ControllerCommands()
 {
     delete m_axis_LeftStick;
     delete m_rightTrigger;
+    delete m_leftTriggerPress;
 }
 //****************************************************************************************
 //-------------------------------------------------------------------------------------- -
@@ -121,8 +126,10 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
     {
         m_pControllerCommands->m_axis_LeftStick = new MovePlayerCommand(pGameObject);
         m_pControllerCommands->m_rightTrigger = new ShootCommand(pGameObject);
+        m_pControllerCommands->m_leftTriggerPress = new BoostCommand(pGameObject);
+        m_pControllerCommands->m_axis_RightStick = m_pControllerCommands->m_rightTrigger;
+
     }
-    
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -358,13 +365,21 @@ bool InputManager::ProcessControllerEvents()
     {
         m_pControllerCommandStructs[playerIndex].controllerButton_LeftShoulder->Execute();
     }
+    */
+
+    const short int k_triggerDeadZone = 1000;
 
     //Left Trigger
-    if (SDL_GameControllerGetAxis(m_ppControllers[playerIndex], SDL_CONTROLLER_AXIS_TRIGGERLEFT))
+    if (SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_TRIGGERLEFT) > k_triggerDeadZone)
     {
-        m_pControllerCommandStructs[playerIndex].controllerButton_LeftTrigger->Execute();
+        m_pControllerCommands->m_leftTriggerPress->Execute();
     }
-    */
+
+    //Right Trigger
+    if (SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT) > k_triggerDeadZone)
+    {
+        m_pControllerCommands->m_rightTrigger->Execute();
+    }
 
     //START BUTTON
     if (SDL_GameControllerGetButton(m_pController, SDL_CONTROLLER_BUTTON_START))
@@ -372,23 +387,24 @@ bool InputManager::ProcessControllerEvents()
         return false;	//TODO: Maybe try to eventually replace this with a pause menu
     }
 
-    //Right Trigger
-    if (SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_TRIGGERRIGHT))
-    {
-        m_pControllerCommands->m_rightTrigger->Execute();
-    }
-
     //Left Stick Movement
-    AxisValue xInputValue = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTX);
-    AxisValue yInputValue = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTY);
+    AxisValue xInputValue_LeftStick = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTX);
+    AxisValue yInputValue_LeftStick = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_LEFTY);
+    //Right Stick Movement
+    AxisValue xInputValue_RightStick = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_RIGHTX);
+    AxisValue yInputValue_RightStick = SDL_GameControllerGetAxis(m_pController, SDL_CONTROLLER_AXIS_RIGHTY);
 
     //TODO: There's probably a more elegant way to do this
     if (m_controller_LeftYInverted)
-        yInputValue *= -1;
+        yInputValue_LeftStick *= -1;
 
-    m_pControllerCommands->m_axis_LeftStick->SetAxisXValue(xInputValue);
-    m_pControllerCommands->m_axis_LeftStick->SetAxisYValue(-yInputValue);
+    m_pControllerCommands->m_axis_LeftStick->SetAxisXValue(xInputValue_LeftStick);
+    m_pControllerCommands->m_axis_LeftStick->SetAxisYValue(-yInputValue_LeftStick);
     m_pControllerCommands->m_axis_LeftStick->Execute();
+
+    m_pControllerCommands->m_axis_RightStick->SetAxisXValue(xInputValue_RightStick);
+    m_pControllerCommands->m_axis_RightStick->SetAxisYValue(-yInputValue_RightStick);
+    m_pControllerCommands->m_axis_RightStick->Execute();
     
     return true;
 }

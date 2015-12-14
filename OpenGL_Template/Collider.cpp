@@ -36,7 +36,7 @@ void Collider::Update()
 
 bool Collider::CheckCollision(Collider* pOther)
 {
-    float touchingDistance = pOther->GetRadius();
+    float touchingDistance = m_radius + pOther->GetRadius();
     float distance = Vector3::Distance(GetPosition(), pOther->GetPosition());
 
     if (distance < touchingDistance)

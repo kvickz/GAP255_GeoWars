@@ -35,17 +35,17 @@ Rigidbody* GameObjectComponentFactory::CreateRigidbodyComponent(GameObject* pGam
 }
 
 //CHARACTER CONTROLLER
-CharacterController* GameObjectComponentFactory::CreateCharacterControllerComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
+CharacterController* GameObjectComponentFactory::CreateCharacterControllerComponent(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody, AudioComponent* pAudioComponent)
 {
-    CharacterController* pComponent = new CharacterController(pGameObject, pTransform, pRigidbody);
+    CharacterController* pComponent = new CharacterController(pGameObject, pTransform, pRigidbody, pAudioComponent);
 
     return pComponent;
 }
 
 //AI CONTROLLER
-EnemyAIComponent* GameObjectComponentFactory::CreateEnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget)
+EnemyAIComponent* GameObjectComponentFactory::CreateEnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget, AudioComponent* pAudioComponent, SpawnManager* pSpawnManager)
 {
-	EnemyAIComponent* pComponent = new EnemyAIComponent(pGameObject, pTransform, pCharController, pTarget);
+    EnemyAIComponent* pComponent = new EnemyAIComponent(pGameObject, pTransform, pCharController, pTarget, pAudioComponent, pSpawnManager);
 
 	return pComponent;
 }
@@ -75,17 +75,25 @@ ParticleComponent* GameObjectComponentFactory::CreateParticleComponent(GameObjec
 }
 
 //GUN COMPONENT
-GunComponent* GameObjectComponentFactory::CreateGunComponent(GameObject* pGameObject, TransformComponent* pTransform, SpawnManager* pSpawnManager)
+GunComponent* GameObjectComponentFactory::CreateGunComponent(GameObject* pGameObject, TransformComponent* pTransform, SpawnManager* pSpawnManager, AudioComponent* pAudioComponent)
 {
-    GunComponent* pComponent = new GunComponent(pGameObject, pTransform, pSpawnManager);
+    GunComponent* pComponent = new GunComponent(pGameObject, pTransform, pSpawnManager, pAudioComponent);
 
     return pComponent;
 }
 
 //BULLET CONTROLLER
-BulletController* GameObjectComponentFactory::CreateBulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
+BulletController* GameObjectComponentFactory::CreateBulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody, AudioComponent* pAudioComponent)
 {
-    BulletController* pComponent = new BulletController(pGameObject, pTransform, pRigidbody);
+    BulletController* pComponent = new BulletController(pGameObject, pTransform, pRigidbody, pAudioComponent);
+
+    return pComponent;
+}
+
+//AUDIO COMPONENT
+AudioComponent* GameObjectComponentFactory::CreateAudioComponent(GameObject* pGameObject, TransformComponent* pTransform, AudioManager* pAudioManager)
+{
+    AudioComponent* pComponent = new AudioComponent(pGameObject, pTransform, pAudioManager);
 
     return pComponent;
 }

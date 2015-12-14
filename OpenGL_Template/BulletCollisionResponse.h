@@ -5,12 +5,16 @@
 
 #include "CollisionResponse.h"
 
+class BulletController;
+
 class BulletCollisionResponse : public CollisionResponse
-{
+{ 
+private:
+    BulletController* m_pBulletController;
+
 public:
-    BulletCollisionResponse(Rigidbody* pRigidbody);
+    BulletCollisionResponse(Rigidbody* pRigidbody, BulletController* pBulletController);
     virtual void Execute(Collision collision);
 };
-
 
 #endif // !BULLETCOLLISIONRESPONSE_H

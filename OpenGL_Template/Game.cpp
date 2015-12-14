@@ -5,6 +5,7 @@
 #include "AssetManager.h"
 #include "InputManager.h"
 #include "SpawnManager.h"
+#include "AudioManager.h"
 #include "CollisionSystem.h"
 #include "EventSystem.h"
 #include "Event.h"
@@ -30,6 +31,7 @@ Game::Game()
     , m_pInputManager(nullptr)
     , m_pEnemySpawner(nullptr)
     , m_pCollisionSystem(nullptr)
+    , m_pAudioManager(nullptr)
     , m_pEventSystem(nullptr)
     , m_pCamera(nullptr)
     , m_pTime(nullptr)
@@ -47,13 +49,15 @@ Game::~Game()
 {
     GetEventSystem()->RemoveListener(k_playerDeathEvent, this);
 
+    SAFE_DELETE(m_pTime);
     SAFE_DELETE(m_pRenderer);
     SAFE_DELETE(m_pAssetManager);
     SAFE_DELETE(m_pInputManager);
-    SAFE_DELETE(m_pTime);
     SAFE_DELETE(m_pEnemySpawner);
+    SAFE_DELETE(m_pAudioManager);
     SAFE_DELETE(m_pCollisionSystem);
     SAFE_DELETE(m_pEventSystem);
+    
 
     m_pCamera = nullptr;
 }
@@ -70,10 +74,11 @@ void Game::Init()
     m_pRenderer->Init();
 
     m_pTime = new Time();
+    m_pAudioManager = new AudioManager();
     m_pAssetManager = new AssetManager();
     m_pInputManager = new InputManager(this);
     m_pCollisionSystem = new CollisionSystem();
-    m_pEnemySpawner = new SpawnManager(this, m_pRenderer, m_pTime, m_pAssetManager, m_pCollisionSystem);
+    m_pEnemySpawner = new SpawnManager(this, m_pRenderer, m_pTime, m_pAssetManager, m_pAudioManager, m_pCollisionSystem);
 
     RegisterForEvents();
     CreateGameObjects();
@@ -159,7 +164,7 @@ void Game::OnEvent(Event* pEvent)
     {
         case k_playerDeathEvent:
         {
-            int debug = 0;
+            
             break;
         }
         case k_enemyDeathEvent:
@@ -178,11 +183,30 @@ void Game::UpdateGameLogic()
 {
     m_pEnemySpawner->Update();
     m_pCollisionSystem->Update();
+    AddQueuedGameObjects();
     UpdateGameObjects();
 
     //float sinVal = sinf(SDL_GetTicks() * 0.0001f) * 0.5f;
     //m_gameObjects[0]->GetTransformComponent()->Translate(sinVal, 0.f, 0.f);
     //m_gameObjects[0]->GetTransformComponent()->Rotate(0.1f, 0.f, 0.f);
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Add Queued Game Objects Function
+//      -Buffer for game objects to add at beginning of next update
+//-------------------------------------------------------------------------------------- -
+void Game::AddQueuedGameObjects()
+{
+    //[???] Why doesn't this seem to work?
+    //      I tried making a queue so that game objects get added at the beginning
+    //      of every frame instead of instantly when AddGameObjects() is called.
+    while (!m_gameObjectsToAdd.empty())
+    {
+        GameObject* pObject = m_gameObjectsToAdd.front();
+        m_gameObjects.push_back(pObject);
+
+        m_gameObjectsToAdd.pop();
+    }
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -257,6 +281,7 @@ void Game::Shutdown()
 //-------------------------------------------------------------------------------------- -
 GameObject* Game::AddGameObject(GameObject* pObject)
 {
+    //m_gameObjectsToAdd.push(pObject);
     m_gameObjects.push_back(pObject);
 
     return pObject;

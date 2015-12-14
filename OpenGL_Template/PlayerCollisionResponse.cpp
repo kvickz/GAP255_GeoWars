@@ -21,12 +21,13 @@ PlayerCollisionResponse::PlayerCollisionResponse(Rigidbody* pRigidbody, Characte
 
 void PlayerCollisionResponse::Execute(Collision collision)
 {
-    m_pRigidbody->AddForce(collision.m_force.x, collision.m_force.z);
+    
 
     switch (collision.m_objectID)
     {
     case k_enemy_1ID:
         m_pRenderComponent->SetColor(1.f, 1.f, 1.f);
+        m_pRigidbody->AddForce(collision.m_force.x, collision.m_force.z);
         m_pRigidbody->GetEventSystem()->TriggerEvent(new PlayerDeathEvent());
         break;
     }

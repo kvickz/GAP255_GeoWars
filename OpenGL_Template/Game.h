@@ -17,6 +17,7 @@ class EventSystem;
 class SpawnManager;
 class AssetManager;
 class InputManager;
+class AudioManager;
 class GameObject;
 class Renderer;
 class Time;
@@ -36,7 +37,6 @@ public:
 	};
 
 private:
-
     bool m_running;
 
     unsigned int m_numOfWalls;
@@ -44,6 +44,7 @@ private:
 
     std::vector<GameObject*> m_gameObjects;
     std::queue<GameObject*> m_gameObjectsToDelete;
+    std::queue<GameObject*> m_gameObjectsToAdd;
     GameObject* m_pCamera;
     GameObject* m_pPlayer;
 
@@ -52,6 +53,7 @@ private:
     CollisionSystem* m_pCollisionSystem;
     AssetManager* m_pAssetManager;
     InputManager* m_pInputManager;
+    AudioManager* m_pAudioManager;
     Time* m_pTime;
 
 	//TODO: Maybe make a level class? No plan for other levels though
@@ -89,6 +91,7 @@ private:
     void UpdateGameLogic();
     void CreateGameObjects();
 	void InitializeGameObjects();
+    void AddQueuedGameObjects();
     void UpdateGameObjects();
     void RemoveGameObject(GameObject* pGameObject);
     void DeleteQueuedObjects();

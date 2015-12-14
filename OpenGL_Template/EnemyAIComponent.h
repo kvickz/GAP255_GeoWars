@@ -11,7 +11,9 @@ class CharacterController;
 class PlayerChaserBehavior;
 class EnemyFloaterBehavior;
 class EnemyBehavior;
+class SpawnManager;
 class Rigidbody;
+class AudioComponent;
 
 enum EnemyBehaviorType
 {
@@ -32,6 +34,8 @@ private:
     EnemyBehavior* m_pBehavior;
 
 	GameObject* m_pTarget;
+    SpawnManager* m_pSpawnManager;
+    AudioComponent* m_pAudioComponent;
 	CharacterController* m_pCharController;
 
     //std::pair<float, float> m_possibleSpeeds;
@@ -43,8 +47,11 @@ private:
 
     bool m_chasingPlayer;
 
+    bool m_markedForDeath;
+    int m_timeTilDeath;
+
 public:
-	EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget);
+    EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget, AudioComponent* pAudioComponent, SpawnManager* pSpawnManager);
 	~EnemyAIComponent();
 
 	virtual void Update() override;
@@ -53,11 +60,12 @@ public:
     void SetBehavior(EnemyBehaviorType type);
     virtual void OnEvent(Event* pEvent) override;
 
-    void Kill();
+    void Kill(bool withParticles);
 
 private:
     void RegisterForEvents();
 	void FindPlayerDirection();
+    void MarkForDeath();
 };
 
 #endif // !ENEMYAICOMPONENT_H

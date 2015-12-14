@@ -60,7 +60,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)SDL2_mixer\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
@@ -84,7 +84,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>glew-1.13.0\lib\Release\Win32;SDL2\lib\x86;SDL2_mixer\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(ProjectDir)SDL2\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)SDL2_mixer\lib\x86\*.dll" "$(OutDir)" &amp;&amp; xcopy /Y "$(ProjectDir)glew-1.13.0\bin\Release\Win32\*.dll" "$(OutDir)"</Command>
@@ -92,6 +92,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AudioComponent.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="BoostCommand.cpp" />
     <ClCompile Include="BulletCollisionResponse.cpp" />
     <ClCompile Include="BulletController.cpp" />
     <ClCompile Include="CameraComponent.cpp" />
@@ -139,6 +142,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AssetManager.h" />
+    <ClInclude Include="AudioComponent.h" />
+    <ClInclude Include="AudioFileEnums.h" />
+    <ClInclude Include="AudioManager.h" />
+    <ClInclude Include="BoostCommand.h" />
     <ClInclude Include="BulletCollisionResponse.h" />
     <ClInclude Include="BulletController.h" />
     <ClInclude Include="CameraComponent.h" />

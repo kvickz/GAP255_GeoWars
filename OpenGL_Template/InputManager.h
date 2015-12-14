@@ -29,6 +29,8 @@ private:
     struct ControllerCommands
     {
         Command* m_axis_LeftStick;
+        Command* m_axis_RightStick;
+        Command* m_leftTriggerPress;
         Command* m_rightTrigger;
 
         ControllerCommands();

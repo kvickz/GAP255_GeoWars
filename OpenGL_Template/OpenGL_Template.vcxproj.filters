@@ -136,6 +136,15 @@
     <ClCompile Include="EventListener.cpp">
       <Filter>Core\EventSystem</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioComponent.cpp">
+      <Filter>GameObject\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="BoostCommand.cpp">
+      <Filter>CommandPattern</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -290,6 +299,18 @@
     </ClInclude>
     <ClInclude Include="BulletCollisionResponse.h">
       <Filter>GameObject\CollisionResponses</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioComponent.h">
+      <Filter>GameObject\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioFileEnums.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="BoostCommand.h">
+      <Filter>CommandPattern</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

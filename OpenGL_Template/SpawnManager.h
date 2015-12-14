@@ -14,6 +14,7 @@ class Game;
 class GameObject;
 class GameObjectFactory;
 class AssetManager;
+class AudioManager;
 class CollisionSystem;
 class Renderer;
 class Time;
@@ -21,9 +22,12 @@ class Time;
 class SpawnManager : public EventListener
 {
 private:
+    bool m_enemiesSpawningActive;
+
     Game* m_pGame;
     Renderer* m_pRenderer;
     AssetManager* m_pAssetManager;
+    AudioManager* const k_pAudioManager;
     CollisionSystem* m_pCollisionSystem;
     GameObjectFactory* m_pGameObjectFactory;
     
@@ -33,12 +37,12 @@ private:
     unsigned int m_enemySpawnInterval;
     unsigned int m_enemySpawnIndex;
     unsigned int m_enemySpawnLimit;
-    unsigned int m_enemySpawnCount;
+    int m_enemySpawnCount;
     const unsigned int k_enemySpawnPositionCount;
     Vector3* m_pEnemySpawnPositions;
 
 public:
-    SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager, CollisionSystem* pCollisionSystem);
+    SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* const pAssetManager, AudioManager* pAudioManager, CollisionSystem* pCollisionSystem);
     ~SpawnManager();
 
     void Update();
@@ -51,6 +55,8 @@ public:
     GameObject* SpawnPlayer(Vector3 position);
     GameObject* SpawnParticle(Vector3 position);
     GameObject* SpawnBullet(Vector3 position);
+    
+    void SpawnDeathParticles(Vector3 position);
 
     virtual void OnEvent(Event* pEvent) override;
 

@@ -14,11 +14,13 @@ class Renderer;
 class CollisionSystem;
 class SpawnManager;
 class AssetManager;
+class AudioManager;
 class Time;
 
 class GameObjectFactory
 {
 private:
+    AudioManager* const k_pAudioManager;
     AssetManager* const k_pAssetManager;
     CollisionSystem* const k_pCollisionSystem;
     SpawnManager* const k_pSpawnManager;
@@ -26,7 +28,7 @@ private:
     Time* const k_pTime;
 
 public:
-    GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager);
+    GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager, AudioManager* const pAudioManager);
 
     //TODO: Store pGame in the class instead of passing
     GameObject* CreatePlanet(Game* pGame);

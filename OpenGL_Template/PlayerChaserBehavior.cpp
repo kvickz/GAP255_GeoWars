@@ -12,6 +12,8 @@
 PlayerChaserBehavior::PlayerChaserBehavior(EnemyAIComponent* pAIComponent, float moveSpeed)
     :EnemyBehavior(pAIComponent)
     , m_moveSpeed(moveSpeed)
+    , k_findPlayerCounterSet(50)
+    , m_findPlayerCounter(k_findPlayerCounterSet - 1)
 {
     //
 }
@@ -45,10 +47,33 @@ void PlayerChaserBehavior::Execute()
     //Find Player Direction
     if (m_pAIComponent->m_pTarget)
     {
-        m_pAIComponent->FindPlayerDirection();
+        FindPlayer();
     }
 
     //Update move direction/speed
     m_pAIComponent->m_moveVector.x = m_pAIComponent->m_direction.x * m_moveSpeed;
     m_pAIComponent->m_moveVector.y = m_pAIComponent->m_direction.y * m_moveSpeed;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Find Player Function
+//      -This function iterates a counter every update which spaces out the number
+//       of times to run a calculation to find the player.
+//      -For example, if m_findPlayerCounterSet is equal to 100
+//       that means that the game will only run the calculation to find the player
+//       every 100 updates instead of every update for efficiency
+//-------------------------------------------------------------------------------------- -
+void PlayerChaserBehavior::FindPlayer()
+{
+    //Iterate the counter
+    ++m_findPlayerCounter;
+
+    if (m_findPlayerCounter >= k_findPlayerCounterSet)
+    {
+        //Run the calculation
+        m_pAIComponent->FindPlayerDirection();
+
+        //Reset the counter
+        m_findPlayerCounter = 0;
+    }
 }

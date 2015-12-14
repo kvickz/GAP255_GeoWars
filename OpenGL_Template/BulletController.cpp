@@ -4,12 +4,15 @@
 
 #include "GameObject.h"
 #include "Rigidbody.h"
+#include "AudioComponent.h"
 #include "Time.h"
 
 #include "Constants.h"
+#include "AudioFileEnums.h"
 
-BulletController::BulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody)
+BulletController::BulletController(GameObject* pGameObject, TransformComponent* pTransform, Rigidbody* pRigidbody, AudioComponent* pAudioComponent)
     :GameObjectComponent(k_bulletComponentID, pGameObject, pTransform)
+    , m_pAudioComponent(pAudioComponent)
     , m_pRigidbody(pRigidbody)
     , k_lifeTimeSet(1000)
 {
@@ -37,6 +40,7 @@ void BulletController::Init(Vector3 bulletVelocity)
 
 void BulletController::DestroyBullet()
 {
+    m_pAudioComponent->PlaySound(SFX::k_bulletDeath_SFX);
     m_pRigidbody->GetGameObject()->DeleteObject();
     //Spawn Particles
 }

@@ -39,7 +39,8 @@ void CollisionSystem::Update()
 
 void CollisionSystem::CheckForCollisions()
 {
-    //n^2 algorithm
+    //n^2 algorithm, not great.
+    //I looked up quadtrees but I don't think I have enough time to implement it.
     for (unsigned int i = 0; i < m_colliders.size(); ++i)
     {
         for (unsigned int j = 0; j < m_colliders.size(); ++j)
@@ -52,9 +53,11 @@ void CollisionSystem::CheckForCollisions()
             if (!m_colliders[i]->CheckCollision(m_colliders[j]))
                 continue;
 
-            //if either object has already collided this frame, ignore it
+            //if either object has already collided this frame, ignore it   //TODO: This breaks the game
+            /*
             if (m_colliders[i]->HasCollidedThisFrame() || m_colliders[j]->HasCollidedThisFrame())
                 continue;
+                */
             
             //Get the forces
             Vector3 forceA = m_colliders[i]->GetForce() * m_colliders[i]->GetMass();

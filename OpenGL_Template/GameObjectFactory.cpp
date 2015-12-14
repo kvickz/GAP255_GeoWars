@@ -9,13 +9,15 @@
 #include "ParticleCollisionResponse.h"
 #include "BulletCollisionResponse.h"
 
-GameObjectFactory::GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager)
+GameObjectFactory::GameObjectFactory(Renderer* const pRenderer, Time* const pTime, CollisionSystem* const pCollisionSystem, AssetManager* const pAssetManager, SpawnManager* const pSpawnManager, AudioManager* const pAudioManager)
     :k_pRenderer(pRenderer)
     , k_pSpawnManager(pSpawnManager)
     , k_pAssetManager(pAssetManager)
+    , k_pAudioManager(pAudioManager)
     , k_pCollisionSystem(pCollisionSystem)
     , k_pTime(pTime)
 {
+    int debug = 0;
     //
 }
 
@@ -92,12 +94,16 @@ GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
     RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
     pObject->AddComponent(k_renderComponentID, pRenderComponent);
 
+    //Add AudioComponent
+    AudioComponent* pAudioComponent = componentFactory.CreateAudioComponent(pObject, pTransform, k_pAudioManager);
+    pObject->AddComponent(k_audioComponentID, pAudioComponent);
+
     //Add Rigidbody
     Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform, k_pCollisionSystem);
     pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
 
     //Add Character Controller Component
-    CharacterController* pCharacterControllerComponent = componentFactory.CreateCharacterControllerComponent(pObject, pTransform, pRigidbody);
+    CharacterController* pCharacterControllerComponent = componentFactory.CreateCharacterControllerComponent(pObject, pTransform, pRigidbody, pAudioComponent);
     pObject->AddComponent(k_characterControllerComponentID, pCharacterControllerComponent);
 
     //Add Collider
@@ -107,7 +113,7 @@ GameObject* GameObjectFactory::CreatePlayer(Game* pGame)
     pObject->AddComponent(pCollider->GetComponentID(), pCollider);
 
     //Add Gun Component
-    GunComponent* pGunComponent = new GunComponent(pObject, pTransform, k_pSpawnManager);
+    GunComponent* pGunComponent = componentFactory.CreateGunComponent(pObject, pTransform, k_pSpawnManager, pAudioComponent);
     pObject->AddComponent(pGunComponent->GetComponentID(), pGunComponent);
 
     return pObject;
@@ -129,16 +135,20 @@ GameObject* GameObjectFactory::CreateEnemy(Game* pGame, GameObject* pTarget)
 	RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
 	pObject->AddComponent(k_renderComponentID, pRenderComponent);
 
+    //Add AudioComponent
+    AudioComponent* pAudioComponent = componentFactory.CreateAudioComponent(pObject, pTransform, k_pAudioManager);
+    pObject->AddComponent(k_audioComponentID, pAudioComponent);
+
 	//Add Rigidbody
     Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform, k_pCollisionSystem);
 	pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
 
     //Add Character Controller Component
-    CharacterController* pCharacterControllerComponent = componentFactory.CreateCharacterControllerComponent(pObject, pTransform, pRigidbody);
+    CharacterController* pCharacterControllerComponent = componentFactory.CreateCharacterControllerComponent(pObject, pTransform, pRigidbody, pAudioComponent);
     pObject->AddComponent(k_characterControllerComponentID, pCharacterControllerComponent);
 
     //Add AI Component
-    EnemyAIComponent* pEnemyAIComponent = componentFactory.CreateEnemyAIComponent(pObject, pTransform, pCharacterControllerComponent, pTarget);
+    EnemyAIComponent* pEnemyAIComponent = componentFactory.CreateEnemyAIComponent(pObject, pTransform, pCharacterControllerComponent, pTarget, pAudioComponent, k_pSpawnManager);
     pObject->AddComponent(k_enemyAIComponentID, pEnemyAIComponent);
 
     //Add Collider
@@ -201,19 +211,23 @@ GameObject* GameObjectFactory::CreateBullet(Game* pGame)
     RenderComponent* pRenderComponent = componentFactory.CreateRenderComponent(pObject, pTransform);
     pObject->AddComponent(k_renderComponentID, pRenderComponent);
 
+    //Add AudioComponent
+    AudioComponent* pAudioComponent = componentFactory.CreateAudioComponent(pObject, pTransform, k_pAudioManager);
+    pObject->AddComponent(k_audioComponentID, pAudioComponent);
+
     //Add Rigidbody
     Rigidbody* pRigidbody = componentFactory.CreateRigidbodyComponent(pObject, pTransform, k_pCollisionSystem);
     pRigidbody->SetMass(0.6f);
     pObject->AddComponent(pRigidbody->GetComponentID(), pRigidbody);
 
     //Add Bullet Controller
-    BulletController* pBulletController = componentFactory.CreateBulletController(pObject, pTransform, pRigidbody);
+    BulletController* pBulletController = componentFactory.CreateBulletController(pObject, pTransform, pRigidbody, pAudioComponent);
     pObject->AddComponent(pBulletController->GetComponentID(), pBulletController);
 
     //Add Collider
     Collider* pCollider = componentFactory.CreateCollider(pObject, pTransform, k_pCollisionSystem, pRigidbody);
     pObject->AddComponent(pCollider->GetComponentID(), pCollider);
-    BulletCollisionResponse* pCollisionResponse = new BulletCollisionResponse(pRigidbody);
+    BulletCollisionResponse* pCollisionResponse = new BulletCollisionResponse(pRigidbody, pBulletController);
     pCollider->SetCollisionResponse(pCollisionResponse);
     pCollider->SetRadius(1.8f);
 

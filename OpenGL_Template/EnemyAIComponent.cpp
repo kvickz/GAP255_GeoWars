@@ -9,6 +9,7 @@
 #include "TransformComponent.h"
 #include "GameObject.h"
 
+#include "Time.h"
 #include "EventSystem.h"
 #include "Event.h"
 
@@ -21,9 +22,11 @@
 //-------------------------------------------------------------------------------------- -
 //  Constructor
 //-------------------------------------------------------------------------------------- -
-EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget)
+EnemyAIComponent::EnemyAIComponent(GameObject* pGameObject, TransformComponent* pTransform, CharacterController* pCharController, GameObject* pTarget, AudioComponent* pAudioComponent, SpawnManager* pSpawnManager)
     :GameObjectComponent(k_enemyAIComponentID, pGameObject, pTransform)
     , m_pCharController(pCharController)
+    , m_pAudioComponent(pAudioComponent)
+    , m_pSpawnManager(pSpawnManager)
     , m_pTarget(pTarget)
     , m_pBehavior(nullptr)
     , m_behaviorType(EnemyBehaviorType::k_none)
@@ -60,6 +63,16 @@ EnemyAIComponent::~EnemyAIComponent()
 //-------------------------------------------------------------------------------------- -
 void EnemyAIComponent::Update()
 {
+    if (m_markedForDeath)
+    {
+        m_timeTilDeath -= Time::GetDeltaTime();
+
+        if (m_timeTilDeath <= 0)
+            Kill(false);
+
+        return;
+    }
+
     if (m_pBehavior)
         m_pBehavior->Execute();
 }
@@ -74,7 +87,8 @@ void EnemyAIComponent::OnEvent(Event* pEvent)
     switch (pEvent->GetEventID())
     {
     case k_playerDeathEvent:
-        Kill();
+        //Kill(false);
+        MarkForDeath();
         break;
     }
 }
@@ -84,10 +98,18 @@ void EnemyAIComponent::RegisterForEvents()
     m_pGameObject->GetEventSystem()->RegisterListener(k_playerDeathEvent, this);
 }
 
-void EnemyAIComponent::Kill()
+#include "AudioComponent.h"
+#include "AudioFileEnums.h"
+#include "SpawnManager.h"
+
+void EnemyAIComponent::Kill(bool withParticles)
 {
-    Vector3 location = GetTransform()->GetPosition();
-    GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
+    GetEventSystem()->TriggerEvent(new EnemyDeathEvent(GetTransform()->GetPosition()));
+
+    if (withParticles)
+        m_pSpawnManager->SpawnDeathParticles(GetTransform()->GetPosition());
+
+    m_pAudioComponent->PlaySound(SFX::k_enemyDeath_SFX);
     GetGameObject()->DeleteObject();
 }
 
@@ -142,4 +164,26 @@ void EnemyAIComponent::SetBehavior(EnemyBehaviorType type)
     }
 
     m_behaviorType = type;
+}
+
+//-------------------------------------------------------------------------------------- -
+//  Set Behavior Function
+//      -Assigns the enemy a random timer until they die
+//-------------------------------------------------------------------------------------- -
+void EnemyAIComponent::MarkForDeath()
+{
+    Kill(false);
+    
+    //[???]
+    //For some reason this was crashing the game, but I couldn't figure out why
+    //  I tried to defer the time of death of each enemy when the player dies to reduce the lag
+    //  but this just makes it crash.
+    /*
+    const int max_possibleValue = 1000;
+    const int min_possibleValue = 10;
+
+    m_timeTilDeath = rand() % (max_possibleValue - min_possibleValue) + min_possibleValue;
+
+    m_markedForDeath = true;
+    */
 }

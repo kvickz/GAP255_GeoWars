@@ -28,10 +28,10 @@ void EnemyCollisionResponse::Execute(Collision collision)
     switch (collision.m_objectID)
     {
     case k_playerID:    //PLAYER
-        m_pEnemyAIComponent->Kill();
+        m_pEnemyAIComponent->Kill(true);
         break;
     case k_bulletID:    //BULLET
-        m_pEnemyAIComponent->Kill();
+        m_pEnemyAIComponent->Kill(true);
         //KillEnemy();
         break;
     }

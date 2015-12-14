@@ -19,25 +19,27 @@
 //-------------------------------------------------------------------------------------- -
 //  Constructor
 //-------------------------------------------------------------------------------------- -
-SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager, CollisionSystem* pCollisionSystem)
+SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetManager* pAssetManager, AudioManager* const pAudioManager, CollisionSystem* pCollisionSystem)
     :m_pGame(pGame)
     , m_pTime(pTime)
     , m_pRenderer(pRenderer)
     , m_pAssetManager(pAssetManager)
+    , k_pAudioManager(pAudioManager)
     , m_pCollisionSystem(pCollisionSystem)
     , k_enemySpawnPositionCount(4)
-    , m_enemySpawnInterval(10)
+    , m_enemySpawnInterval(50)
     , m_enemySpawnIndex(0)
     , m_enemySpawnLimit(50)
     , m_enemySpawnCount(0)
     , m_enemyTimer(0)
+    , m_enemiesSpawningActive(true)
 {
     RegisterForEvents();
 
     CreateEnemySpawns();
 
     //Create Factory
-    m_pGameObjectFactory = new GameObjectFactory(pRenderer, pTime, pCollisionSystem, m_pAssetManager, this);
+    m_pGameObjectFactory = new GameObjectFactory(pRenderer, pTime, pCollisionSystem, m_pAssetManager, this, k_pAudioManager);
 
     //Load Necessary Materials
     Color playerDefaultColor(0, 0.5f, 1.f);
@@ -52,7 +54,8 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
 //-------------------------------------------------------------------------------------- -
 SpawnManager::~SpawnManager()
 {
-    m_pGame->GetEventSystem()->RegisterListener(k_enemyDeathEvent, this);
+    m_pGame->GetEventSystem()->RemoveListener(k_playerDeathEvent, this);
+    m_pGame->GetEventSystem()->RemoveListener(k_enemyDeathEvent, this);
 
     SAFE_DELETE(m_pEnemySpawnPositions);
     SAFE_DELETE(m_pGameObjectFactory);
@@ -67,6 +70,10 @@ SpawnManager::~SpawnManager()
 //-------------------------------------------------------------------------------------- -
 void SpawnManager::Update()
 {
+    //If this is active, enemies will spawn
+    if (!m_enemiesSpawningActive)
+        return;
+
     //Spawning enemies at 'timed' intervals, currently framerate dependent
     ++m_enemyTimer;
 
@@ -84,15 +91,9 @@ void SpawnManager::Update()
             m_enemySpawnIndex = 0;
 
         //Spawn Enemy
-        if (m_enemySpawnCount < m_enemySpawnLimit) {
+        if (m_enemySpawnCount < m_enemySpawnLimit) 
+        {
             m_pGame->AddGameObject(SpawnEnemy(m_pEnemySpawnPositions[m_enemySpawnIndex]));
-
-            const int k_numOfParticles = 5;
-            for (int i = 0; i < k_numOfParticles; ++i)
-            {
-                //Vector3 position(i * 2, 0, 0);
-                //m_pGame->AddGameObject(SpawnParticle(position));
-            }
         }
     }
 }
@@ -102,6 +103,7 @@ void SpawnManager::Update()
 //-------------------------------------------------------------------------------------- -
 void SpawnManager::RegisterForEvents()
 {
+    m_pGame->GetEventSystem()->RegisterListener(k_playerDeathEvent, this);
     m_pGame->GetEventSystem()->RegisterListener(k_enemyDeathEvent, this);
 }
 
@@ -112,21 +114,25 @@ void SpawnManager::OnEvent(Event* pEvent)
 {
     switch (pEvent->GetEventID())
     {
+    case k_playerDeathEvent:
+        m_enemiesSpawningActive = false;
+
     case k_enemyDeathEvent:
         DecreaseSpawnCounter();
-
-        //Get position of death
-        EnemyDeathEvent* enemyDeathEvent = static_cast<EnemyDeathEvent*>(pEvent);
-        Vector3 position = enemyDeathEvent->GetLocation();
-
-        //Spawn particles
-        const int k_numOfParticles = 16;
-        for (int i = 0; i < k_numOfParticles; ++i)
-        {
-            m_pGame->AddGameObject(SpawnParticle(position));
-        }
+        //SpawnDeathParticles(static_cast<EnemyDeathEvent*>(pEvent)->GetLocation());
         break;
     }
+}
+
+void SpawnManager::SpawnDeathParticles(Vector3 position)
+{
+    //Spawn particles
+    const int k_numOfParticles = 15;
+    for (int i = 0; i < k_numOfParticles; ++i)
+    {
+        m_pGame->AddGameObject(SpawnParticle(position));
+    }
+    
 }
 
 //-------------------------------------------------------------------------------------- -
@@ -314,10 +320,10 @@ void SpawnManager::CreateEnemySpawns()
 {
     m_pEnemySpawnPositions = new Vector3[k_enemySpawnPositionCount]
     {
-        Vector3(50, 0, 50)
-            , Vector3(50, 0, -50)
-            , Vector3(-50, 0, -50)
-            , Vector3(-50, 0, 50)
+        Vector3(70, 0, 50)
+            , Vector3(70, 0, -50)
+            , Vector3(-70, 0, -50)
+            , Vector3(-70, 0, 50)
     };
 }
 
