@@ -25,6 +25,12 @@ class Time;
 typedef unsigned int GLuint;
 typedef int GLint;
 
+enum GameMode
+{
+    k_standard,
+    k_survival,
+};
+
 class Game : public EventListener
 {
 public:
@@ -38,6 +44,8 @@ public:
 
 private:
     bool m_running;
+
+    static GameMode s_gameMode;
 
     unsigned int m_numOfWalls;
     unsigned int m_currentScore;
@@ -78,6 +86,7 @@ public:
     GameObject* GetPlayerPointer() { return m_pPlayer; }
     
     EventSystem* const GetEventSystem() { return m_pEventSystem; }
+    static GameMode const GetGameMode() { return s_gameMode; }
 
 private:
 	//CreatingGameObjects helper funcs

@@ -11,6 +11,7 @@ class EnemyAIComponent;
 class EnemyCollisionResponse : public CollisionResponse
 {
 private:
+    bool m_enemyDied = false;
     EnemyAIComponent* m_pEnemyAIComponent;
 
 public:

@@ -22,7 +22,7 @@ GunComponent::GunComponent(GameObject* pGameObject, TransformComponent* pTransfo
     , m_pSpawnManager(pSpawnManager)
     , m_pAudioComponent(pAudioComponent)
     , m_bulletSpeed(2.f)
-    , m_bulletOffset(10.f)
+    , m_bulletOffset(12.5f)
     , k_shootCooldownSet(250)
     , m_shootCooldown(k_shootCooldownSet)
     , m_gunCooled(true)

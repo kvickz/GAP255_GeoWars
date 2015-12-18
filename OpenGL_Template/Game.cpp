@@ -67,8 +67,20 @@ Game::~Game()
 //      -Initializes all of the main systems of the game
 //      -Loads all necessary data and creates all the initial game objects
 //-------------------------------------------------------------------------------------- -
+
+//------------------------------------------------------//
+//          SET THIS TO CHANGE THE GAME MODE            //
+GameMode Game::s_gameMode = GameMode::k_standard;
+//GameMode Game::s_gameMode = GameMode::k_survival;
+//------------------------------------------------------//
+
+#include <stdlib.h>
+#include <Time.h>
+
 void Game::Init()
 {
+    srand((unsigned int)time(NULL));
+
     m_pEventSystem = new EventSystem();
     m_pRenderer = new Renderer();
     m_pRenderer->Init();

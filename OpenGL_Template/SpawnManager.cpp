@@ -29,7 +29,7 @@ SpawnManager::SpawnManager(Game* pGame, Renderer* pRenderer, Time* pTime, AssetM
     , k_enemySpawnPositionCount(4)
     , m_enemySpawnInterval(50)
     , m_enemySpawnIndex(0)
-    , m_enemySpawnLimit(50)
+    , m_enemySpawnLimit(55)
     , m_enemySpawnCount(0)
     , m_enemyTimer(0)
     , m_enemiesSpawningActive(true)

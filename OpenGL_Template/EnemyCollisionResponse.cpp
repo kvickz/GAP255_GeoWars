@@ -10,6 +10,7 @@
 
 #include "EventSystem.h"
 #include "Event.h"
+#include "Game.h"
 
 #include "Constants.h"
 
@@ -28,18 +29,21 @@ void EnemyCollisionResponse::Execute(Collision collision)
     switch (collision.m_objectID)
     {
     case k_playerID:    //PLAYER
-        m_pEnemyAIComponent->Kill(true);
+        KillEnemy();
         break;
     case k_bulletID:    //BULLET
-        m_pEnemyAIComponent->Kill(true);
-        //KillEnemy();
+        if (Game::GetGameMode() == GameMode::k_standard)
+            KillEnemy();
         break;
     }
 }
 
 void EnemyCollisionResponse::KillEnemy()
 {
-    Vector3 location = m_pRigidbody->GetTransform()->GetPosition();
-    m_pRigidbody->GetEventSystem()->TriggerEvent(new EnemyDeathEvent(location));
-    m_pRigidbody->GetGameObject()->DeleteObject();
+    if (!m_enemyDied) 
+    {
+        m_pEnemyAIComponent->Kill(true);
+        m_enemyDied = true;
+    }
+        
 }

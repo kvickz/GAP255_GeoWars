@@ -40,7 +40,10 @@ void BulletController::Init(Vector3 bulletVelocity)
 
 void BulletController::DestroyBullet()
 {
+    if (!m_bulletAlive)
+        return;
+    
     m_pAudioComponent->PlaySound(SFX::k_bulletDeath_SFX);
     m_pRigidbody->GetGameObject()->DeleteObject();
-    //Spawn Particles
+    m_bulletAlive = false;
 }

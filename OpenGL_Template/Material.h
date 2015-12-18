@@ -19,7 +19,6 @@ private:
     std::unordered_map<ShaderType, ShaderPair> m_shaders;
     Color m_color;
 
-
 public:
     Material();
     Material(const char* const pVertexFilePath, const char* const pFragmentFilePath, Color color);

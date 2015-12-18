@@ -17,7 +17,7 @@ Collider::Collider(GameObject* pGameObject, TransformComponent* pTransform, Coll
     , m_pCollisionResponse(nullptr)
     , m_collidedThisFrame(false)
     , m_pRigidbody(pRigidbody)
-    , m_radius(2.f)
+    , m_radius(3.f)
 {
     pCollisionSystem->RegisterCollider(this);
 }

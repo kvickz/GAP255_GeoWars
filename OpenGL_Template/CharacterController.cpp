@@ -59,5 +59,5 @@ void CharacterController::Move(float x, float y)
 
 void CharacterController::Boost()
 {
-    m_pRigidbody->AddForce(m_previousMoveVector.x, -m_previousMoveVector.y);
+    m_pRigidbody->AddForce(m_previousMoveVector.x / 2, -m_previousMoveVector.y / 2);
 }

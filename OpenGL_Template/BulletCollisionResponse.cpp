@@ -20,5 +20,5 @@ BulletCollisionResponse::BulletCollisionResponse(Rigidbody* pRigidbody, BulletCo
 void BulletCollisionResponse::Execute(Collision collision)
 {
     if (collision.m_objectID != k_bulletID)
-    m_pBulletController->DestroyBullet();
+        m_pBulletController->DestroyBullet();
 }

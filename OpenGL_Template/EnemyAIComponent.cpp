@@ -172,18 +172,11 @@ void EnemyAIComponent::SetBehavior(EnemyBehaviorType type)
 //-------------------------------------------------------------------------------------- -
 void EnemyAIComponent::MarkForDeath()
 {
-    Kill(false);
-    
-    //[???]
-    //For some reason this was crashing the game, but I couldn't figure out why
-    //  I tried to defer the time of death of each enemy when the player dies to reduce the lag
-    //  but this just makes it crash.
-    /*
-    const int max_possibleValue = 1000;
-    const int min_possibleValue = 10;
+    const int max_possibleValue = 1100;
+    const int min_possibleValue = 110;
 
     m_timeTilDeath = rand() % (max_possibleValue - min_possibleValue) + min_possibleValue;
 
     m_markedForDeath = true;
-    */
+    
 }

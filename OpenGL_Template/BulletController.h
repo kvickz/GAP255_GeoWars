@@ -13,6 +13,7 @@ class AudioComponent;
 class BulletController : public GameObjectComponent
 {
 private:
+    bool m_bulletAlive = true;
     Vector3 m_bulletVelocity;
 
     Rigidbody* m_pRigidbody;

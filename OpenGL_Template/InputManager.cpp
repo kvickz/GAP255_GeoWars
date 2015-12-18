@@ -72,9 +72,10 @@ InputManager::~InputManager()
 //-------------------------------------------------------------------------------------- -
 InputManager::KeyboardCommands::~KeyboardCommands()
 {
-    delete axis_XYZ;
+    delete m_axis_XYZ;
     //delete axis_XYZ_rotation;
-    delete m_shootCommand;
+    delete m_arrowKeys;
+    delete m_leftShift;
 }
 
 //****************************************************************************************
@@ -117,8 +118,10 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
     //KEYBOARD BINDINGS
     if (m_keyboardActive)
     {
-        m_pKeyboardCommands->axis_XYZ = new MovePlayerCommand(pGameObject);
-        m_pKeyboardCommands->m_shootCommand = new ShootCommand(pGameObject);
+        m_pKeyboardCommands->m_axis_XYZ = new MovePlayerCommand(pGameObject);
+        m_pKeyboardCommands->m_arrowKeys = new ShootCommand(pGameObject);
+        m_pKeyboardCommands->m_axis_XYZ_rotation = m_pKeyboardCommands->m_arrowKeys;
+        m_pKeyboardCommands->m_leftShift = new BoostCommand(pGameObject);
     }
 
     //CONTROLLER BINDINGS
@@ -128,7 +131,6 @@ void InputManager::AddPlayer(unsigned int playerIndex, GameObject* pGameObject)
         m_pControllerCommands->m_rightTrigger = new ShootCommand(pGameObject);
         m_pControllerCommands->m_leftTriggerPress = new BoostCommand(pGameObject);
         m_pControllerCommands->m_axis_RightStick = m_pControllerCommands->m_rightTrigger;
-
     }
 }
 
@@ -214,6 +216,36 @@ int InputManager::HandleEvents()
             {
                 m_spaceKey_Pressed = true;
             }
+
+            //UP ARROW
+            if (appEvent.key.keysym.sym == SDLK_UP)
+            {
+                m_upKey_Pressed = true;
+            }
+
+            //DOWN ARROW
+            if (appEvent.key.keysym.sym == SDLK_DOWN)
+            {
+                m_downKey_Pressed = true;
+            }
+
+            //LEFT ARROW
+            if (appEvent.key.keysym.sym == SDLK_LEFT)
+            {
+                m_leftKey_Pressed = true;
+            }
+
+            //RIGHT ARROW
+            if (appEvent.key.keysym.sym == SDLK_RIGHT)
+            {
+                m_rightKey_Pressed = true;
+            }
+
+            //LEFT SHIFT
+            if (appEvent.key.keysym.sym == SDLK_LSHIFT)
+            {
+                m_leftShiftKey_Pressed = true;
+            }
         }
 
         //KEY UP EVENTS
@@ -271,6 +303,36 @@ int InputManager::HandleEvents()
             if (appEvent.key.keysym.sym == SDLK_SPACE)
             {
                 m_spaceKey_Pressed = false;
+            }
+
+            //UP ARROW
+            if (appEvent.key.keysym.sym == SDLK_UP)
+            {
+                m_upKey_Pressed = false;
+            }
+
+            //DOWN ARROW
+            if (appEvent.key.keysym.sym == SDLK_DOWN)
+            {
+                m_downKey_Pressed = false;
+            }
+
+            //LEFT ARROW
+            if (appEvent.key.keysym.sym == SDLK_LEFT)
+            {
+                m_leftKey_Pressed = false;
+            }
+
+            //RIGHT ARROW
+            if (appEvent.key.keysym.sym == SDLK_RIGHT)
+            {
+                m_rightKey_Pressed = false;
+            }
+
+            //LEFT SHIFT
+            if (appEvent.key.keysym.sym == SDLK_LSHIFT)
+            {
+                m_leftShiftKey_Pressed = false;
             }
         }
         //-------------------------
@@ -330,7 +392,7 @@ int InputManager::HandleEvents()
     if (m_keyboardActive)
     {
         ApplyKeyboardInput();
-        m_pKeyboardCommands->axis_XYZ->Execute();
+        m_pKeyboardCommands->m_axis_XYZ->Execute();
     }
     
     ApplyMouseInput();
@@ -418,13 +480,13 @@ void InputManager::ApplyKeyboardInput()
     // A KEY
     if (m_AKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(-k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ->SetAxisXValue(-k_maxStickInputValue);
     }
 
     // D KEY
     if (m_DKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisXValue(k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ->SetAxisXValue(k_maxStickInputValue);
     }
 
     // Q KEY
@@ -442,31 +504,71 @@ void InputManager::ApplyKeyboardInput()
     // W KEY
     if (m_WKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ->SetAxisYValue(k_maxStickInputValue);
     }
 
     // S KEY
     if (m_SKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ->SetAxisYValue(-k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ->SetAxisYValue(-k_maxStickInputValue);
     }
 
     // R KEY
     if (m_RKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ_rotation->SetAxisXValue(k_maxStickInputValue);
     }
 
     // F KEY
     if (m_FKey_Pressed)
     {
-        m_pKeyboardCommands->axis_XYZ_rotation->SetAxisXValue(-k_maxStickInputValue);
+        m_pKeyboardCommands->m_axis_XYZ_rotation->SetAxisXValue(-k_maxStickInputValue);
     }
 
     //SPACE BAR
     if (m_spaceKey_Pressed)
     {
-        m_pKeyboardCommands->m_shootCommand->Execute();
+        
+    }
+
+    //LEFT SHIFT
+    if (m_leftShiftKey_Pressed)
+    {
+        m_pKeyboardCommands->m_leftShift->Execute();
+    }
+
+    //UP ARROW
+    if (m_upKey_Pressed)
+    {
+        m_arrowKey_Pressed = true;
+        m_pKeyboardCommands->m_arrowKeys->SetAxisYValue(k_maxStickInputValue);
+    }
+
+    //DOWN ARROW
+    if (m_downKey_Pressed)
+    {
+        m_arrowKey_Pressed = true;
+        m_pKeyboardCommands->m_arrowKeys->SetAxisYValue(-k_maxStickInputValue);
+    }
+
+    //LEFT ARROW
+    if (m_leftKey_Pressed)
+    {
+        m_arrowKey_Pressed = true;
+        m_pKeyboardCommands->m_arrowKeys->SetAxisXValue(-k_maxStickInputValue);
+    }
+
+    //RIGHT ARROW
+    if (m_rightKey_Pressed)
+    {
+        m_arrowKey_Pressed = true;
+        m_pKeyboardCommands->m_arrowKeys->SetAxisXValue(k_maxStickInputValue);
+    }
+
+    //If any arrow key has been pressed this update
+    if (m_arrowKey_Pressed)
+    {
+        m_pKeyboardCommands->m_arrowKeys->Execute();
     }
 }
 
@@ -520,6 +622,8 @@ void InputManager::ApplyMouseInput()
 void InputManager::ResetUpdateVariables()
 {
     //Default axes to zero
-    m_pKeyboardCommands->axis_XYZ->ResetAxisValues();
-    //m_pKeyboardCommands->axis_XYZ_rotation->ResetAxisValues();
+    m_pKeyboardCommands->m_axis_XYZ->ResetAxisValues();
+    m_pKeyboardCommands->m_axis_XYZ_rotation->ResetAxisValues();
+
+    m_arrowKey_Pressed = false;
 }

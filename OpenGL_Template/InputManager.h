@@ -19,9 +19,10 @@ private:
 
     struct KeyboardCommands
     {
-        Command* axis_XYZ;
-        Command* axis_XYZ_rotation;
-        Command* m_shootCommand;
+        Command* m_axis_XYZ;
+        Command* m_axis_XYZ_rotation;
+        Command* m_arrowKeys;
+        Command* m_leftShift;
 
         ~KeyboardCommands();
     };
@@ -55,6 +56,15 @@ private:
     bool m_RKey_Pressed = false;
     bool m_FKey_Pressed = false;
     bool m_spaceKey_Pressed = false;
+
+    bool m_upKey_Pressed = false;
+    bool m_downKey_Pressed = false;
+    bool m_leftKey_Pressed = false;
+    bool m_rightKey_Pressed = false;
+
+    bool m_leftShiftKey_Pressed = false;
+
+    bool m_arrowKey_Pressed;
 
     //****************************//
     //      Mouse variables       //

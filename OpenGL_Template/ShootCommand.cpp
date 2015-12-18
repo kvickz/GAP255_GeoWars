@@ -35,24 +35,28 @@ void ShootCommand::Execute()
     //Get Unit Vector
     float xSquared = valueX * valueX;
     float ySquared = valueY * valueY;
-    float magnitude = xSquared + ySquared;
+    float magnitude = sqrtf(xSquared + ySquared);
     float magnitudeSquared = magnitude * magnitude;
 
-    float xUnit = xSquared / magnitudeSquared;
-    float yUnit = ySquared / magnitudeSquared;
+    float xUnit = valueX / magnitude;
+    float yUnit = valueY / magnitude;
 
+    /*
     //Account for negative values
-    if (valueX < 0)
+    if (m_xAxis < 0)
         xUnit *= -1;
 
-    if (valueY < 0)
+    if (m_yAxis < 0)
         yUnit *= -1;
+        */
 
     //Clamp range -1 to 1
+    /*
     if (xUnit < -1) xUnit = -1;
     if (xUnit >  1) xUnit =  1;
     if (yUnit < -1) yUnit = -1;
     if (yUnit >  1) yUnit =  1;
+    */
 
     //Plug in
     m_pGunComponent->Shoot(xUnit, -yUnit);

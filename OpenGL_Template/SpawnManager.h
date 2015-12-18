@@ -37,7 +37,7 @@ private:
     unsigned int m_enemySpawnInterval;
     unsigned int m_enemySpawnIndex;
     unsigned int m_enemySpawnLimit;
-    int m_enemySpawnCount;
+    unsigned int m_enemySpawnCount;
     const unsigned int k_enemySpawnPositionCount;
     Vector3* m_pEnemySpawnPositions;
 

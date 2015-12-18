@@ -200,6 +200,9 @@ void RenderComponent::SetColor(float r, float g, float b)
 //-------------------------------------------------------------------------------------- -
 void RenderComponent::CreateProgram()
 {
+    //TODO: Figure out why this sort of cuts models in half
+    //glBindVertexArray(GetVAO());
+
     m_shaderProgram = glCreateProgram();
     glAttachShader(m_shaderProgram, m_pMaterial->GetShaderGLPointer(ShaderType::k_vertex));
     glAttachShader(m_shaderProgram, m_pMaterial->GetShaderGLPointer(ShaderType::k_fragment));
